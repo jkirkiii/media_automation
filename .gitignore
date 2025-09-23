@@ -1,0 +1,54 @@
+# Environment and secrets
+.env
+.env.local
+.env.production
+*.key
+*.pem
+api-keys.txt
+
+# Runtime data and configs
+data/
+logs/
+configs/*/config.xml
+configs/*/config.ini
+configs/*/settings.json
+docker-compose.override.yml
+
+# Application data
+**/Database/
+**/Logs/
+**/Backups/
+**/Cache/
+
+# Media files (you don't want to commit actual media)
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.m4v
+*.iso
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
