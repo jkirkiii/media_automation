@@ -18,24 +18,24 @@
 - [x] WD Ultrastar 6TB drive ordered
 
 ### Storage Implementation ðŸ”„
-- [ ] **WAITING:** Drive delivery (ETA: few days)
-- [ ] Physical drive installation
-- [ ] Drive initialization and formatting
-- [ ] Test drive performance and health
+- [x] **WAITING:** Drive delivery (ETA: few days)
+- [x] Physical drive installation
+- [x] Drive initialization and formatting
+- [x] Test drive performance and health
 - [ ] Plan future RAID 1 expansion (second 6TB drive)
 
 ### Basic Plex Setup ðŸ”„
-- [ ] Download Plex Media Server installer
-- [ ] Install Plex Media Server
-- [ ] Initial Plex configuration
-- [ ] Create basic library structure (Movies, TV Shows, Music)
-- [ ] Test local network streaming
+- [x] Download Plex Media Server installer
+- [x] Install Plex Media Server
+- [x] Initial Plex configuration
+- [x] Create basic library structure (Movies, TV Shows, Music)
+- [x] Test local network streaming
 - [ ] Verify hardware transcoding (Quick Sync)
 
 ### Media Migration ðŸ”„
-- [ ] Plan folder structure on new drive
-- [ ] Transfer existing media library
-- [ ] Update Plex library paths
+- [x] Plan folder structure on new drive
+- [x] Transfer existing media library
+- [x] Update Plex library paths
 - [ ] Re-scan and verify all content
 
 **Phase 1 Success Criteria:** Plex server operational with expanded storage, streaming reliably to local devices
