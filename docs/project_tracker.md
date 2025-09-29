@@ -30,7 +30,7 @@
 - [x] Initial Plex configuration
 - [x] Create basic library structure (Movies, TV Shows, Music)
 - [x] Test local network streaming
-- [ ] Verify hardware transcoding (Quick Sync)
+- [x] Verify hardware transcoding (Quick Sync)
 
 ### Media Migration ðŸ”„
 - [x] Plan folder structure on new drive
