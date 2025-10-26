@@ -21,6 +21,23 @@ configs/*/config.ini
 configs/*/settings.json
 docker-compose.override.yml
 
+# Prowlarr/Sonarr/Radarr config backups (contain sensitive data)
+configs/prowlarr/*.xml
+configs/prowlarr/*.db
+configs/prowlarr/*.db-*
+configs/prowlarr/*.zip
+configs/sonarr/*.xml
+configs/sonarr/*.db
+configs/sonarr/*.db-*
+configs/sonarr/*.zip
+configs/radarr/*.xml
+configs/radarr/*.db
+configs/radarr/*.db-*
+configs/radarr/*.zip
+
+# Allow README files in config directories
+!configs/*/README.md
+
 # Application data
 **/Database/
 **/Logs/

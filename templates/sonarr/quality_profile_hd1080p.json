@@ -1,0 +1,49 @@
+{
+  "name": "HD-1080p",
+  "upgradeAllowed": true,
+  "cutoff": 3,
+  "items": [
+    {
+      "quality": {
+        "id": 9,
+        "name": "HDTV-1080p"
+      },
+      "allowed": true
+    },
+    {
+      "quality": {
+        "id": 3,
+        "name": "WEBDL-1080p"
+      },
+      "allowed": true
+    },
+    {
+      "quality": {
+        "id": 8,
+        "name": "Bluray-1080p"
+      },
+      "allowed": true
+    },
+    {
+      "quality": {
+        "id": 2,
+        "name": "HDTV-720p"
+      },
+      "allowed": false
+    },
+    {
+      "quality": {
+        "id": 5,
+        "name": "WEBDL-720p"
+      },
+      "allowed": false
+    },
+    {
+      "quality": {
+        "id": 6,
+        "name": "Bluray-720p"
+      },
+      "allowed": false
+    }
+  ]
+}

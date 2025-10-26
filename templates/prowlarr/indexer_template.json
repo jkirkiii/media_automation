@@ -1,0 +1,25 @@
+{
+  "name": "INDEXER_NAME_HERE",
+  "implementation": "Torznab",
+  "configContract": "TorznabSettings",
+  "settings": {
+    "baseUrl": "https://your-tracker-url.com",
+    "apiPath": "/api",
+    "apiKey": "YOUR_API_KEY_HERE",
+    "username": "YOUR_USERNAME_HERE",
+    "password": "YOUR_PASSWORD_HERE",
+    "categories": [
+      5030,
+      5040
+    ],
+    "animeCategories": [],
+    "removeYear": false,
+    "searchByTitle": false
+  },
+  "enable": true,
+  "priority": 25,
+  "minimumSeeders": 1,
+  "seedRatio": null,
+  "seedTime": null,
+  "tags": []
+}

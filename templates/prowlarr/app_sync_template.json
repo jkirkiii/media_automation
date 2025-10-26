@@ -1,0 +1,16 @@
+{
+  "name": "Sonarr",
+  "implementation": "Sonarr",
+  "configContract": "SonarrSettings",
+  "settings": {
+    "prowlarrUrl": "http://localhost:9696",
+    "baseUrl": "http://localhost:8989",
+    "apiKey": "SONARR_API_KEY_HERE",
+    "syncLevel": "fullSync",
+    "syncCategories": [
+      5030,
+      5040
+    ],
+    "tags": []
+  }
+}

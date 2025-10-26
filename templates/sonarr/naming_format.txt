@@ -1,0 +1,65 @@
+# Sonarr Naming Format Templates
+
+## Standard Episode Format
+{Series Title} - S{season:00}E{episode:00} - {Episode Title}
+
+## Daily Episode Format
+{Series Title} - {Air-Date} - {Episode Title}
+
+## Anime Episode Format
+{Series Title} - S{season:00}E{episode:00} - {Episode Title}
+
+## Series Folder Format
+{Series Title} ({Series Year})
+
+## Season Folder Format
+Season {season:00}
+
+## Multi-Episode Format
+{Series Title} - S{season:00}E{episode:00}-E{episode:00} - {Episode Title}
+
+---
+
+## Examples
+
+### Standard Episode
+Input: Breaking.Bad.S01E01.Pilot.1080p.WEB-DL.mkv
+Output: Breaking Bad - S01E01 - Pilot.mkv
+
+### Series Folder
+Input: Breaking Bad
+Output: Breaking Bad (2008)
+
+### Season Folder
+Input: Season 1
+Output: Season 01
+
+---
+
+## Custom Format Examples
+
+### Include Quality
+{Series Title} - S{season:00}E{episode:00} - {Episode Title} [{Quality Title}]
+Example: Breaking Bad - S01E01 - Pilot [WEBDL-1080p].mkv
+
+### Include Release Group
+{Series Title} - S{season:00}E{episode:00} - {Episode Title} - {Release Group}
+Example: Breaking Bad - S01E01 - Pilot - BTN.mkv
+
+### Include Codec
+{Series Title} - S{season:00}E{episode:00} - {Episode Title} [{Video Codec}]
+Example: Breaking Bad - S01E01 - Pilot [x264].mkv
+
+---
+
+## Configuration in Sonarr
+
+Settings → Media Management → Episode Naming
+- Rename Episodes: Yes
+- Replace Illegal Characters: Yes
+- Standard Episode Format: [paste format above]
+- Daily Episode Format: [paste format above]
+- Anime Episode Format: [paste format above]
+- Series Folder Format: [paste format above]
+- Season Folder Format: [paste format above]
+- Multi-Episode Style: Range
