@@ -6,6 +6,13 @@
 *.pem
 api-keys.txt
 
+# Claude Code local settings
+.claude/settings.local.json
+
+# Sensitive personal data
+docs/kindle_clients.txt
+docs/open_requests.txt
+
 # Runtime data and configs
 data/
 logs/
