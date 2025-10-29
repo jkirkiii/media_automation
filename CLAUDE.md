@@ -60,14 +60,27 @@ The repository follows the structure outlined in `docs/proposed_repo_structure.m
 
 ### Configuration Files
 - **Sonarr**: `C:\ProgramData\Sonarr\config.xml` (contains API key: gitignored)
-- **Prowlarr**: Configuration includes API key `44e45c10103a4ba6959d0430c12cb73a`
-- **qBittorrent**: Web UI at http://localhost:8080 (username: murdoch137)
+- **Prowlarr**: API configuration managed via `config.ps1` (gitignored)
+- **qBittorrent**: Web UI at http://localhost:8080 (credentials in config.ps1)
+- **Credentials**: All sensitive data stored in `config.ps1` (see Credential Management below)
 
 ## Configuration Strategy
 
+### Credential Management
+**IMPORTANT**: This project uses `config.ps1` for secure credential storage.
+
+- **`config.ps1`**: Contains all API keys and passwords (gitignored, never committed)
+- **`config.ps1.template`**: Template with placeholders (committed to git)
+- **Scripts**: Automatically load credentials from `config.ps1`
+- **Setup**: Copy `config.ps1.template` to `config.ps1` and fill in your credentials
+
+See `docs/Credential_Management_Guide.md` for detailed instructions.
+
+### File Organization
 - Use template files (`.template` extension) to avoid committing sensitive data
-- Separate configuration structure from sensitive values using `.env` files
+- Separate configuration structure from sensitive values
 - Runtime configurations stored in `data/configs/` (gitignored)
+- Application configs in `C:\ProgramData\[AppName]\` (gitignored)
 
 ## Technology Stack
 
@@ -199,10 +212,11 @@ The repository follows the structure outlined in `docs/proposed_repo_structure.m
 4. **Buffer awareness** - Be mindful of download volume vs upload capacity
 
 ### API Keys & Security
-- API keys are stored in scripts for development convenience
-- **Never commit** actual passwords or sensitive tracker credentials
-- Use `.gitignore` to exclude `config.xml` files and similar sensitive configs
-- Consider moving to environment variables for production use
+- **All credentials managed via `config.ps1`** (gitignored, never committed)
+- API keys regenerated on 2025-10-28 (old keys in git history are now invalid)
+- Scripts automatically load credentials from `config.ps1` or accept parameters
+- Template files (`.template`) provide secure script patterns
+- See `docs/Credential_Management_Guide.md` for complete security documentation
 
 ### Development Workflow
 1. **Test scripts in development** before applying to production configuration

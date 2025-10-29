@@ -1,0 +1,33 @@
+# config.ps1.template
+# Credential Configuration Template
+#
+# INSTRUCTIONS:
+# 1. Copy this file to config.ps1 (do NOT commit config.ps1)
+# 2. Fill in your actual credentials below
+# 3. Source this file in scripts: . .\config.ps1
+#
+# This file should be listed in .gitignore to prevent credential commits
+
+# Prowlarr Configuration
+$ProwlarrUrl = "http://localhost:9696"
+$ProwlarrApiKey = "YOUR_PROWLARR_API_KEY_HERE"
+
+# Sonarr Configuration
+$SonarrUrl = "http://localhost:8989"
+$SonarrApiKey = "YOUR_SONARR_API_KEY_HERE"
+
+# Radarr Configuration (when configured)
+$RadarrUrl = "http://localhost:7878"
+$RadarrApiKey = "YOUR_RADARR_API_KEY_HERE"
+
+# qBittorrent Configuration
+$qBittorrentUrl = "http://localhost:8080"
+$qBittorrentUsername = "YOUR_QBITTORRENT_USERNAME"
+$qBittorrentPassword = "YOUR_QBITTORRENT_PASSWORD"
+
+# Calibre-Web Configuration
+$CalibreWebUrl = "http://localhost:8083"
+$CalibreWebUsername = "admin"
+$CalibreWebPassword = "YOUR_CALIBRE_WEB_PASSWORD"
+
+Write-Host "[CONFIG] Credentials loaded from config.ps1" -ForegroundColor Gray

@@ -1,8 +1,13 @@
-# Connect-Prowlarr-To-Sonarr.ps1
-# Connects Prowlarr to Sonarr via API
+# Connect-Prowlarr-To-Sonarr.ps1.template
+# Template for connecting Prowlarr to Sonarr via API
 #
-# CREDENTIALS: Load from config.ps1 or use parameters
-# See Connect-Prowlarr-To-Sonarr.ps1.template for secure version
+# SETUP:
+# 1. Copy ../config.ps1.template to ../config.ps1
+# 2. Fill in your API keys in config.ps1
+# 3. Run this script
+#
+# Or use parameters:
+# .\Connect-Prowlarr-To-Sonarr.ps1 -ProwlarrApiKey "xxx" -SonarrApiKey "yyy"
 
 param(
     [string]$ProwlarrApiKey,
@@ -18,15 +23,11 @@ if (-not $ProwlarrApiKey -or -not $SonarrApiKey) {
         Write-Host "Loading credentials from config.ps1..." -ForegroundColor Gray
         . $configPath
     } else {
-        Write-Host "WARNING: Using script defaults. Create config.ps1 for secure credential management." -ForegroundColor Yellow
-        # Fallback to parameters if provided via command line
-        if (-not $ProwlarrApiKey -or -not $SonarrApiKey) {
-            Write-Host "ERROR: No credentials provided!" -ForegroundColor Red
-            Write-Host "Either:" -ForegroundColor Yellow
-            Write-Host "  1. Create config.ps1 from config.ps1.template" -ForegroundColor White
-            Write-Host "  2. Or use parameters: -ProwlarrApiKey 'xxx' -SonarrApiKey 'yyy'" -ForegroundColor White
-            exit 1
-        }
+        Write-Host "ERROR: No credentials provided!" -ForegroundColor Red
+        Write-Host "Either:" -ForegroundColor Yellow
+        Write-Host "  1. Create config.ps1 from config.ps1.template" -ForegroundColor White
+        Write-Host "  2. Or use parameters: -ProwlarrApiKey 'xxx' -SonarrApiKey 'yyy'" -ForegroundColor White
+        exit 1
     }
 }
 

@@ -6,6 +6,13 @@
 *.pem
 api-keys.txt
 
+# Credential configuration files (DO NOT COMMIT)
+config.ps1
+config.json
+credentials.json
+secrets.yml
+secrets.yaml
+
 # Claude Code local settings
 .claude/settings.local.json
 
