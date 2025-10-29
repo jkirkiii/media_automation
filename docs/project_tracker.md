@@ -3,7 +3,7 @@
 ## Project Overview
 **Goal:** Transform basic Plex server into fully automated media management system
 **Timeline:** Phased approach - basic functionality first, then automation features
-**Current Status:** Phase 1 - Hardware complete, waiting for storage drive
+**Current Status:** Phase 3 - TV automation complete (Sonarr + qBittorrent), Phase 3.5 - Ebook management in progress (Calibre)
 
 ---
 
@@ -99,7 +99,47 @@
 
 ---
 
-## PHASE 4: ADVANCED AUTOMATION ðŸ“‹
+## PHASE 3.5: EBOOK MANAGEMENT ðŸ"„
+*Priority: MEDIUM - Expanding media automation to books*
+
+### Calibre Setup & Library Standardization âœ…
+- [x] **Install Calibre** desktop application
+- [x] **Initial import** of existing ebooks from `A:\Media\Literature\`
+- [x] **Analyze current library structure** and identify inconsistencies
+- [x] **Create backup** of original Literature directory
+- [x] **Standardize folder structure** - Let Calibre manage organization
+- [x] **Re-import cleaned library** into Calibre at `A:\Media\Calibre`
+- [x] **Configure Calibre preferences** (library location, metadata sources)
+- [x] **Cleanup duplicates and metadata issues**
+- [x] **Verify torrents still seeding** after migration
+
+### Calibre-Web Integration âœ…
+- [x] **Research Calibre-Web** installation options (Docker vs Windows)
+- [x] **Install Calibre-Web** via Python/pip (native Windows)
+- [x] **Configure Calibre-Web** to connect to Calibre library
+- [x] **Test web interface** functionality at http://localhost:8083
+- [x] **Document manual import workflow** for adding new books
+
+### Readarr Automation ðŸ"‹
+- [ ] **Research Readarr** features and MyAnonamouse integration
+- [ ] **Install Readarr** for ebook automation
+- [ ] **Connect Readarr to Prowlarr** (MyAnonamouse indexer)
+- [ ] **Connect Readarr to qBittorrent** (`books` category)
+- [ ] **Configure quality profiles** for ebook formats (EPUB, MOBI, AZW3)
+- [ ] **Set up Calibre integration** in Readarr
+- [ ] **Test automated ebook acquisition** with manual search
+
+### Audiobook Consideration ðŸ"‹
+- [ ] **Research audiobook management** options (Audiobookshelf, Booksonic)
+- [ ] **Evaluate Readarr audiobook support**
+- [ ] **Plan audiobook folder structure** separate from ebooks
+- [ ] **Consider Plex audiobook library** vs dedicated solution
+
+**Phase 3.5 Success Criteria:** Calibre managing clean, standardized ebook library with web access via Calibre-Web; Readarr automating new ebook acquisitions from MyAnonamouse
+
+---
+
+## PHASE 4: ADVANCED AUTOMATION ðŸ"‹
 *Priority: LOW - Polish and convenience features*
 
 ### Enhanced Features ðŸ“‹
