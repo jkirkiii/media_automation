@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Plex Media Server automation project designed to transform a basic Plex server into a fully automated media management system. The project follows a phased approach detailed in `docs/project_tracker.md`.
 
-**Current Status:** Phase 3 - Sonarr configured and operational with qBittorrent integration. Automatic TV show management active. Phase 3.5 - Calibre and Calibre-Web configured and operational. Ebook library standardized and accessible via web interface.
+**Current Status:** Phase 3 - Sonarr configured and operational with qBittorrent integration. Automatic TV show management active. Phase 3.5 - **COMPLETE** (2025-12-06) - Calibre and Calibre-Web fully operational with remote access, SMTP, and Send-to-Kindle functionality. Ebook library accessible locally and remotely at https://books.mnemo.info with multiple users actively using the system. **Next:** Phase 3.6 - Readarr for automated ebook acquisition, then Phase 3.7 - Radarr for movie automation.
 
 ## Architecture
 
@@ -56,12 +56,19 @@ The repository follows the structure outlined in `docs/proposed_repo_structure.m
 - `docs/proposed_repo_structure.md` - Repository structure design
 - `docs/Sonarr_Setup_Guide.md` - Comprehensive Sonarr setup documentation
 - `docs/SONARR_SETUP_COMPLETE.md` - Current operational status
+- `docs/Calibre-Web_Remote_Access_Guide.md` - Cloudflare Tunnel setup guide for remote ebook library access
+- `docs/Calibre-Web_Remote_Access_COMPLETE.md` - **Completed setup documentation (operational)**
+- `docs/Calibre-Web_Configuration_Decisions.md` - Configuration decisions made during setup
+- `docs/Calibre-Web_Security_Checklist.md` - Security hardening checklist (optional next steps)
 - `.gitignore` - Configured to exclude sensitive configs, media files, and runtime data
 
 ### Configuration Files
 - **Sonarr**: `C:\ProgramData\Sonarr\config.xml` (contains API key: gitignored)
 - **Prowlarr**: API configuration managed via `config.ps1` (gitignored)
 - **qBittorrent**: Web UI at http://localhost:8080 (credentials in config.ps1)
+- **Calibre-Web**: Config at `A:\Media\Calibre-Web-Config\` (http://localhost:8083, https://books.mnemo.info)
+- **Cloudflared**: Tunnel configuration at `C:\Users\rokon\.cloudflared\` (configured and operational)
+- **Cloudflare Tunnel**: calibre-web-tunnel pointing to books.mnemo.info
 - **Credentials**: All sensitive data stored in `config.ps1` (see Credential Management below)
 
 ## Configuration Strategy
@@ -93,10 +100,21 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 - **Ebook Library**: `A:\Media\Calibre` (~70 books, standardized and organized)
 - **Private Trackers**: TorrentDay, TorrentLeech, Darkpeers, MyAnonamouse
 
+### Completed Features
+- **Remote Access**: Cloudflare Tunnel (cloudflared) operational ✅
+  - Domain: mnemo.info (registered via Porkbun)
+  - HTTPS access at https://books.mnemo.info
+  - Automatic startup via Windows Task Scheduler
+  - Family/friend sharing active without exposing home IP
+- **Email/Send-to-Kindle**: SMTP fully configured ✅
+  - Gmail SMTP (port 587, StartTLS)
+  - Send-to-Kindle functionality working on multiple devices
+  - Users can email EPUBs directly to their Kindle devices
+  - rokonin@gmail.com approved in Amazon Kindle settings
+
 ### Planned/Future
 - **Movie Automation**: Radarr
 - **Ebook Automation**: Readarr (for automated ebook acquisition)
-- **Ebook Web Interface**: Calibre-Web (web-based ebook library access)
 - **Subtitle Automation**: Bazarr
 - **Request Management**: Overseerr
 - **Monitoring**: Tautulli
@@ -227,13 +245,18 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 ## Next Steps for Future Development
 
 ### Short Term (Ebook & Movie Setup)
-**Ebook Management (Complete - Manual Workflow Active):**
+**Ebook Management (COMPLETE - 2025-12-06):**
 1. ✅ Standardized library - Calibre managing organization at `A:\Media\Calibre`
 2. ✅ Clean import with consistent metadata (~70 books)
 3. ✅ Calibre-Web installed and configured for web-based access
-4. 📚 **Current Workflow:** Manual import (Download → qBittorrent → Calibre Desktop → Calibre-Web)
-5. 🔜 **Next:** Install Readarr for automated ebook acquisition
-6. 🔜 Integrate Readarr with Prowlarr (MyAnonamouse indexer already configured)
+4. ✅ Remote access via Cloudflare Tunnel at https://books.mnemo.info
+5. ✅ Automatic startup on login via Windows Task Scheduler
+6. ✅ **SMTP/Send-to-Kindle configured** - Gmail App Password, working on multiple devices
+7. ✅ **User management complete** - Multiple family/friend accounts with permissions
+8. ✅ **Security hardening complete** - Admin password changed, anonymous browsing disabled, proxy headers enabled
+9. 📚 **Current Workflow:** Manual import (Download → qBittorrent → Calibre Desktop → Calibre-Web → Send to Kindle)
+10. 🔜 **Next:** Install Readarr for automated ebook acquisition
+11. 🔜 Integrate Readarr with Prowlarr (MyAnonamouse indexer already configured)
 
 **Radarr Setup:**
 1. Install and configure Radarr following similar pattern to Sonarr
@@ -286,9 +309,21 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 
 ### Ebook Management
 ```powershell
-# Start Calibre-Web
-.\Start-CalibreWeb.bat
-# Access at: http://localhost:8083
+# Start Calibre-Web + Cloudflare Tunnel (recommended - auto-starts on login)
+.\Start-CalibreWeb-Remote.bat
+# Access at: http://localhost:8083 or https://books.mnemo.info
+
+# Start services (PowerShell)
+.\scripts\Start-CalibreWeb-With-Tunnel.ps1
+
+# Stop services
+.\scripts\Stop-CalibreWeb-And-Tunnel.ps1
+
+# Check if services are running
+Get-Process | Where-Object {$_.ProcessName -like "*cps*" -or $_.ProcessName -like "*cloudflared*"}
+
+# Check tunnel connection status
+& "C:\Users\rokon\.cloudflared\cloudflared.exe" tunnel info calibre-web-tunnel
 
 # Check ebook library status
 .\scripts\Check-Literature-Directory.ps1
@@ -296,6 +331,13 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 # Compare Calibre import
 .\scripts\Compare-Calibre-Import.ps1
 ```
+
+**Send-to-Kindle Features:**
+- Users can send EPUB books directly to Kindle devices via email
+- SMTP configured with Gmail (rokonin@gmail.com)
+- Sender approved in Amazon Kindle settings
+- Default subject/body work perfectly - no customization needed
+- Tested and working on multiple users' devices
 
 ### Troubleshooting
 ```powershell

@@ -3,7 +3,7 @@
 ## Project Overview
 **Goal:** Transform basic Plex server into fully automated media management system
 **Timeline:** Phased approach - basic functionality first, then automation features
-**Current Status:** Phase 3 - TV automation complete (Sonarr + qBittorrent), Phase 3.5 - Ebook management in progress (Calibre)
+**Current Status:** Phase 3 - TV automation complete (Sonarr + qBittorrent). Phase 3.5 - Ebook management COMPLETE (Calibre + Calibre-Web with remote access and SMTP/Send-to-Kindle functionality). Ready for Phase 3.6 (Readarr) and Phase 3.7 (Radarr).
 
 ---
 
@@ -99,8 +99,9 @@
 
 ---
 
-## PHASE 3.5: EBOOK MANAGEMENT ðŸ"„
+## PHASE 3.5: EBOOK MANAGEMENT âœ…
 *Priority: MEDIUM - Expanding media automation to books*
+**Status: COMPLETE** - 2025-12-06
 
 ### Calibre Setup & Library Standardization âœ…
 - [x] **Install Calibre** desktop application
@@ -118,9 +119,48 @@
 - [x] **Install Calibre-Web** via Python/pip (native Windows)
 - [x] **Configure Calibre-Web** to connect to Calibre library
 - [x] **Test web interface** functionality at http://localhost:8083
-- [x] **Document manual import workflow** for adding new books
 
-### Readarr Automation ðŸ"‹
+### Remote Access Setup âœ…
+- [x] **Register domain** (mnemo.info via Porkbun)
+- [x] **Set up Cloudflare DNS** management
+- [x] **Install cloudflared** tunnel daemon
+- [x] **Create Cloudflare Tunnel** (calibre-web-tunnel)
+- [x] **Configure DNS** for books.mnemo.info subdomain
+- [x] **Test remote access** at https://books.mnemo.info
+- [x] **Set up automatic startup** via Windows Task Scheduler
+- [x] **Create management scripts** (Start/Stop services)
+
+### Security & User Management âœ…
+- [x] **Change admin password** from default
+- [x] **Disable public registration**
+- [x] **Disable anonymous browsing**
+- [x] **Create user accounts** for family/friends
+- [x] **Configure user permissions** (Download, Browse, Read Online, Send to Kindle)
+- [x] **Enable proxy headers** for accurate IP logging
+
+### Email & Send-to-Kindle Functionality âœ…
+- [x] **Generate Gmail App Password** for SMTP authentication
+- [x] **Configure SMTP settings** in Calibre-Web (Gmail, port 587, StartTLS)
+- [x] **Test email sending** functionality
+- [x] **Configure Kindle email addresses** for users
+- [x] **Add sender to Amazon Kindle approved list**
+- [x] **Verify Send-to-Kindle** working on multiple devices
+
+**Phase 3.5 Success Criteria:** âœ… COMPLETE
+- âœ… Calibre managing clean, standardized ebook library (~70 books)
+- âœ… Web access via Calibre-Web locally (http://localhost:8083)
+- âœ… Secure remote access via Cloudflare Tunnel (https://books.mnemo.info)
+- âœ… SMTP/Send-to-Kindle functionality operational for all users
+- âœ… Automatic startup on system boot
+- âœ… User management and permissions configured
+- âœ… Family/friends successfully using the system
+
+---
+
+## PHASE 3.6: EBOOK AUTOMATION (READARR) ðŸ"‹
+*Priority: MEDIUM - Automated ebook acquisition*
+
+### Readarr Setup ðŸ"‹
 - [ ] **Research Readarr** features and MyAnonamouse integration
 - [ ] **Install Readarr** for ebook automation
 - [ ] **Connect Readarr to Prowlarr** (MyAnonamouse indexer)
@@ -135,7 +175,22 @@
 - [ ] **Plan audiobook folder structure** separate from ebooks
 - [ ] **Consider Plex audiobook library** vs dedicated solution
 
-**Phase 3.5 Success Criteria:** Calibre managing clean, standardized ebook library with web access via Calibre-Web; Readarr automating new ebook acquisitions from MyAnonamouse
+**Phase 3.6 Success Criteria:** Readarr automating new ebook acquisitions from MyAnonamouse, integrating seamlessly with Calibre library
+
+---
+
+## PHASE 3.7: MOVIE AUTOMATION (RADARR) ðŸ"‹
+*Priority: MEDIUM - Complete media automation suite*
+
+### Radarr Setup ðŸ"‹
+- [ ] **Install and configure Radarr** following similar pattern to Sonarr
+- [ ] **Connect Radarr to Prowlarr** for indexers
+- [ ] **Configure `movie-radarr` category** in qBittorrent
+- [ ] **Set up quality profiles** (Conservative HD-1080p)
+- [ ] **Configure root folder** at `A:\Media\Movies\`
+- [ ] **Test with manual movie search** before enabling automation
+
+**Phase 3.7 Success Criteria:** Radarr operational with same automation quality as Sonarr
 
 ---
 
