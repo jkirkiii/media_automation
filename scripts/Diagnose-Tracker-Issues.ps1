@@ -4,7 +4,7 @@
 param(
     [string]$qBitHost = "localhost",
     [int]$qBitPort = 8080,
-    [string]$qBitUsername = "murdoch137"
+    [string]$qBitUsername = "admin"
 )
 
 Write-Host "`n=== qBittorrent Tracker Diagnostics ===`n" -ForegroundColor Cyan

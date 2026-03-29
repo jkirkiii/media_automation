@@ -3,7 +3,7 @@
 
 param(
     [string]$SonarrUrl = "http://localhost:8989",
-    [string]$ApiKey = "332f7d21453b4225a85fc6852bdad7ee",
+    [string]$ApiKey = "",
     [switch]$WhatIf
 )
 

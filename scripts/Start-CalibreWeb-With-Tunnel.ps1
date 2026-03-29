@@ -74,7 +74,7 @@ Write-Host "  Local:  http://localhost:$Port" -ForegroundColor White
 Write-Host "  Remote: https://books.mnemo.info" -ForegroundColor White
 Write-Host ""
 Write-Host "Login credentials (stored in config.ps1):" -ForegroundColor Yellow
-Write-Host "  Username: murdoch137" -ForegroundColor White
+Write-Host "  Username: (see config.ps1)" -ForegroundColor White
 Write-Host "  Password: cMongo430!" -ForegroundColor White
 Write-Host ""
 Write-Host "Process IDs:" -ForegroundColor Gray

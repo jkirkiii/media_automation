@@ -1,0 +1,123 @@
+# Calibre Tag Mapping Configuration
+# This file defines how existing tags should be migrated to standardized tags
+# Copy this to calibre_tag_mapping.ps1 and customize based on your audit results
+
+# INSTRUCTIONS:
+# 1. Run Audit-Calibre-Tags.ps1 to see your current tags
+# 2. Copy this template to calibre_tag_mapping.ps1
+# 3. Fill in the mappings based on your audit results
+# 4. Use Update-Calibre-Tags.ps1 to apply the changes
+
+# ============================================================================
+# TAG MAPPING RULES
+# ============================================================================
+
+# Define mappings: old tag -> new standardized tag
+# Multiple old tags can map to the same new tag (consolidation)
+# Set to $null or "" to remove a tag entirely
+
+$script:TagMappings = @{
+    # Example Science Fiction variations
+    "Sci-Fi"            = "Fiction.Science Fiction"
+    "SciFi"             = "Fiction.Science Fiction"
+    "SF"                = "Fiction.Science Fiction"
+    "Sci Fi"            = "Fiction.Science Fiction"
+    "Science-Fiction"   = "Fiction.Science Fiction"
+    "sci-fi"            = "Fiction.Science Fiction"  # case variation
+
+    # Example Fantasy variations
+    "Fantasy Fiction"   = "Fiction.Fantasy"
+    "FANTASY"           = "Fiction.Fantasy"
+
+    # Example Mystery variations
+    "Mysteries"         = "Fiction.Mystery"
+    "Mystery Fiction"   = "Fiction.Mystery"
+
+    # Example Thriller variations
+    "Thrillers"         = "Fiction.Thriller"
+    "Thriller Fiction"  = "Fiction.Thriller"
+
+    # Example Historical variations
+    "Historical Fiction" = "Fiction.Historical"
+    "Historical Novel"   = "Fiction.Historical"
+
+    # Example Biography variations
+    "Biography"         = "Non-Fiction.Biography & Memoir"
+    "Biographies"       = "Non-Fiction.Biography & Memoir"
+    "Bio"               = "Non-Fiction.Biography & Memoir"
+
+    # Example Self-Help variations
+    "Self Help"         = "Non-Fiction.Self-Help & Psychology"
+    "Selfhelp"          = "Non-Fiction.Self-Help & Psychology"
+    "Self-help"         = "Non-Fiction.Self-Help & Psychology"
+
+    # Young Adult variations
+    "YA"                = "Young Adult"
+    "Y.A."              = "Young Adult"
+    "Young-Adult"       = "Young Adult"
+
+    # Children's variations
+    "Childrens"         = "Children's"
+    "Children"          = "Children's"
+    "Kids"              = "Children's"
+
+    # Graphic Novel variations
+    "Comics"            = "Graphic Novel"
+    "Comic"             = "Graphic Novel"
+    "Graphic Novels"    = "Graphic Novel"
+
+    # Tags to remove (set to empty string or $null)
+    "untagged"          = ""
+    "ebook"             = ""
+    "epub"              = ""
+    "Unknown"           = ""
+
+    # ADD YOUR CUSTOM MAPPINGS BELOW
+    # Based on your audit results from Audit-Calibre-Tags.ps1
+    # -------------------------------------------------------
+
+}
+
+# ============================================================================
+# BATCH OPERATIONS
+# ============================================================================
+
+# Patterns for automatic tag detection and assignment
+# Used by the Tag-New-Imports script for ongoing maintenance
+
+$script:AutoTagPatterns = @{
+    # Keywords in title/description that suggest genres
+    Keywords = @{
+        "Fiction.Science Fiction" = @("space", "alien", "robot", "cyberpunk", "dystopia", "future")
+        "Fiction.Fantasy"         = @("magic", "wizard", "dragon", "elf", "quest", "kingdom")
+        "Fiction.Mystery"         = @("detective", "murder", "clue", "investigation", "sleuth")
+        "Fiction.Romance"         = @("love", "romance", "passion", "heart")
+        "Fiction.Horror"          = @("horror", "terror", "fear", "haunted", "ghost", "vampire")
+        "Fiction.Thriller"        = @("suspense", "thriller", "conspiracy", "espionage")
+    }
+
+    # Series that should get specific genre tags
+    Series = @{
+        # Example: "The Expanse" = "Fiction.Science Fiction.Space Opera"
+        # Add your series mappings here
+    }
+}
+
+# ============================================================================
+# VALIDATION RULES
+# ============================================================================
+
+# Maximum tags per book (will warn if exceeded)
+$script:MaxTagsPerBook = 5
+
+# Tags that should always be preserved (never auto-removed)
+$script:ProtectedTags = @(
+    # Add any tags you never want automatically removed
+)
+
+# Tags that are mutually exclusive (book can't have both)
+$script:MutuallyExclusiveTags = @(
+    @("Fiction", "Non-Fiction")
+    @("Young Adult", "Children's", "Adult")
+    # Add more groups as needed
+)

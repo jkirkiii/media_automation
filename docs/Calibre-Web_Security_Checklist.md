@@ -169,7 +169,7 @@ SMTP Password: [App Password - NOT your regular Gmail password]
 SMTP Hostname: smtp.gmail.com
 SMTP Port: 587
 Encryption: StartTLS
-From E-mail: rokonin@gmail.com
+From E-mail: YOUR_EMAIL@gmail.com
 Authentication: Gmail App Password
 ```
 
@@ -189,7 +189,7 @@ Authentication: Gmail App Password
   - Go to https://www.amazon.com/myk (Amazon Manage Your Content and Devices)
   - Settings → Personal Document Settings
   - Approved Personal Document E-mail List
-  - ✅ Added rokonin@gmail.com to approved senders
+  - ✅ Added YOUR_EMAIL@gmail.com to approved senders
   - ✅ Tested and verified working on multiple devices
 
 ---

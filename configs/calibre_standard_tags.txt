@@ -1,0 +1,196 @@
+# Standard Tag Taxonomy for Calibre Library
+# Based on BISAC categories and personal library best practices
+# Last Updated: 2025-12-06
+#
+# USAGE GUIDELINES:
+# - Use 3-5 tags per book maximum
+# - Be consistent (don't mix "Sci-Fi" and "Science Fiction")
+# - Primary genre should always be first tag
+# - Can use hierarchical notation with periods (Fiction.Science Fiction)
+# - For mood/tropes, consider using custom columns instead
+
+# ============================================================================
+# FICTION - PRIMARY GENRES
+# ============================================================================
+
+Fiction
+Fiction.Science Fiction
+Fiction.Science Fiction.Space Opera
+Fiction.Science Fiction.Cyberpunk
+Fiction.Science Fiction.Time Travel
+Fiction.Science Fiction.Dystopian
+Fiction.Science Fiction.Hard SF
+Fiction.Science Fiction.Military SF
+
+Fiction.Fantasy
+Fiction.Fantasy.Epic
+Fiction.Fantasy.Urban
+Fiction.Fantasy.Dark
+Fiction.Fantasy.Historical
+Fiction.Fantasy.Paranormal
+
+Fiction.Mystery & Detective
+Fiction.Mystery & Detective.Cozy
+Fiction.Mystery & Detective.Hard-Boiled
+Fiction.Mystery & Detective.Police Procedural
+Fiction.Mystery & Detective.Amateur Sleuth
+
+Fiction.Thriller
+Fiction.Thriller.Suspense
+Fiction.Thriller.Psychological
+Fiction.Thriller.Legal
+Fiction.Thriller.Medical
+Fiction.Thriller.Political
+Fiction.Thriller.Espionage
+
+Fiction.Horror
+Fiction.Horror.Supernatural
+Fiction.Horror.Psychological
+Fiction.Horror.Gothic
+
+Fiction.Romance
+Fiction.Romance.Contemporary
+Fiction.Romance.Historical
+Fiction.Romance.Paranormal
+Fiction.Romance.Romantic Suspense
+
+Fiction.Historical
+Fiction.Historical.Ancient
+Fiction.Historical.Medieval
+Fiction.Historical.Victorian
+Fiction.Historical.WWI
+Fiction.Historical.WWII
+Fiction.Historical.20th Century
+
+Fiction.Literary
+Fiction.Literary.LitRPG
+
+Fiction.Contemporary
+Fiction.Classics
+Fiction.Adventure
+Fiction.Western
+Fiction.War & Military
+Fiction.Humor
+Fiction.Satire
+Fiction.Fairy Tales & Folklore
+
+# ============================================================================
+# NON-FICTION - PRIMARY CATEGORIES
+# ============================================================================
+
+Non-Fiction
+Non-Fiction.Biography & Memoir
+Non-Fiction.Biography.Historical
+Non-Fiction.Biography.Political
+Non-Fiction.Biography.Entertainment
+Non-Fiction.Memoir
+
+Non-Fiction.History
+Non-Fiction.History.Ancient
+Non-Fiction.History.Medieval
+Non-Fiction.History.Military
+Non-Fiction.History.American
+Non-Fiction.History.European
+Non-Fiction.History.World
+
+Non-Fiction.Science & Technology
+Non-Fiction.Science.Physics
+Non-Fiction.Science.Biology
+Non-Fiction.Science.Astronomy
+Non-Fiction.Science.Mathematics
+Non-Fiction.Technology
+Non-Fiction.Computers & Programming
+
+Non-Fiction.Business & Economics
+Non-Fiction.Business.Entrepreneurship
+Non-Fiction.Business.Management
+Non-Fiction.Economics
+Non-Fiction.Personal Finance
+
+Non-Fiction.Self-Help & Psychology
+Non-Fiction.Self-Help
+Non-Fiction.Psychology
+Non-Fiction.Philosophy
+Non-Fiction.Spirituality & Religion
+Non-Fiction.Sex & Sexuality
+
+Non-Fiction.Politics & Social Sciences
+Non-Fiction.Political Science
+Non-Fiction.Political Science.International Relations
+
+Non-Fiction.Sociology
+Non-Fiction.Anthropology
+Non-Fiction.Current Affairs
+
+Non-Fiction.Arts & Humanities
+Non-Fiction.Art
+Non-Fiction.Music
+Non-Fiction.Literary Criticism
+Non-Fiction.Philosophy
+Non-Fiction.Mythology & Folklore
+Non-Fiction.Education & Reference
+
+Non-Fiction.Health & Wellness
+Non-Fiction.Cooking & Food
+Non-Fiction.Travel
+Non-Fiction.Nature & Environment
+Non-Fiction.True Crime
+Non-Fiction.Essays
+Non-Fiction.Reference
+
+# ============================================================================
+# SPECIAL CATEGORIES
+# ============================================================================
+
+Graphic Novel
+Graphic Novel.Superhero
+Graphic Novel.Manga
+Graphic Novel.Memoir
+
+Poetry
+Drama
+Short Stories
+Anthology
+
+# ============================================================================
+# AUDIENCE TAGS (Optional - use sparingly)
+# ============================================================================
+
+Young Adult
+Middle Grade
+Children's
+Adult
+
+# ============================================================================
+# FORMAT/SPECIAL ATTRIBUTES (Optional - consider custom columns instead)
+# ============================================================================
+
+# NOTE: These might be better as custom columns rather than tags
+# Collection
+# Series
+# Award Winner
+# Classic
+# Bestseller
+
+# ============================================================================
+# COMMON TAG MAPPING (for cleanup scripts)
+# ============================================================================
+
+# This section defines common variations and what they should map to
+# Format: incorrect_tag -> correct_tag
+#
+# Examples:
+# Sci-Fi -> Fiction.Science Fiction
+# SciFi -> Fiction.Science Fiction
+# SF -> Fiction.Science Fiction
+# Sci Fi -> Fiction.Science Fiction
+# Fantasy Fiction -> Fiction.Fantasy
+# Historical Fiction -> Fiction.Historical
+# Mysteries -> Fiction.Mystery
+# Thrillers -> Fiction.Thriller
+# Biography -> Non-Fiction.Biography & Memoir
+# Biographies -> Non-Fiction.Biography & Memoir
+# Self Help -> Non-Fiction.Self-Help & Psychology
+# Selfhelp -> Non-Fiction.Self-Help & Psychology
+# YA -> Young Adult
+# Childrens -> Children's

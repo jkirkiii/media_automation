@@ -1,5 +1,5 @@
 $SonarrUrl = "http://localhost:8989"
-$SonarrApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+$SonarrApiKey = ""
 $headers = @{"X-Api-Key" = $SonarrApiKey}
 
 Write-Host "`n=== Sonarr Setup Verification ===`n" -ForegroundColor Cyan

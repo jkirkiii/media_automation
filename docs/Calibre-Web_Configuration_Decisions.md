@@ -220,7 +220,7 @@ Password: [Your Outlook password]
 
 **Recommendation:** Use the **same email** as your domain registrar for easier management
 
-**Your Choice:** rokonin@gmail.com
+**Your Choice:** YOUR_EMAIL@gmail.com
 
 ---
 
@@ -240,7 +240,7 @@ Password: [Your Outlook password]
    - Use only for emergency recovery
    - Store password in password manager
 
-**Your Admin Username:** murdoch137
+**Your Admin Username:** (see config.ps1)
 
 ---
 
@@ -271,8 +271,8 @@ Before starting setup, confirm you have answers for:
 - [ ] Email sending: ✅ Enable ☐ Disable
 - [ ] Email provider (if enabled): Gmail
 - [ ] User permissions decided (see table above)
-- [ ] Admin account strategy: murdoch137
-- [ ] Cloudflare account email: rokonin@gmail.com
+- [ ] Admin account strategy: (see config.ps1)
+- [ ] Cloudflare account email: YOUR_EMAIL@gmail.com
 
 ---
 

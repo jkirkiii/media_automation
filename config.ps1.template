@@ -30,4 +30,9 @@ $CalibreWebUrl = "http://localhost:8083"
 $CalibreWebUsername = "admin"
 $CalibreWebPassword = "YOUR_CALIBRE_WEB_PASSWORD"
 
+# Windows File Sharing Configuration
+$WindowsShareUsername = "YOUR_WINDOWS_SHARE_USERNAME"
+$WindowsSharePassword = "YOUR_WINDOWS_SHARE_PASSWORD"
+$WindowsShareServer = "YOUR_SERVER_COMPUTER_NAME"  # e.g., "mnemosyne"
+
 Write-Host "[CONFIG] Credentials loaded from config.ps1" -ForegroundColor Gray

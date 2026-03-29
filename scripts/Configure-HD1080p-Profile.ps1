@@ -1,5 +1,5 @@
 $SonarrUrl = "http://localhost:8989"
-$SonarrApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+$SonarrApiKey = ""
 $headers = @{"X-Api-Key" = $SonarrApiKey; "Content-Type" = "application/json"}
 
 Write-Host "`n=== Configuring HD-1080p Profile ===`n" -ForegroundColor Cyan

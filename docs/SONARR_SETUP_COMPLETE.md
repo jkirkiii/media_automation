@@ -18,7 +18,7 @@ Sonarr has been successfully installed, configured, and is now managing your TV 
 - **Installation Type:** Windows Native Service
 - **Port:** 8989
 - **Access URL:** http://localhost:8989
-- **API Key:** 332f7d21453b4225a85fc6852bdad7ee (stored in config.xml)
+- **API Key:** (stored in config.xml — see config.ps1)
 
 ### Library Status
 - **Root Folder:** A:\Media\TV Shows
@@ -40,7 +40,7 @@ Sonarr has been successfully installed, configured, and is now managing your TV 
 **Download Client:**
 - ✅ qBittorrent connected
 - Port: 8080
-- Username: murdoch137
+- Username: (see config.ps1)
 - Category: tv-sonarr
 - **Remove after import:** NO (respects 10-day seed requirement)
 

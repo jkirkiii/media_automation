@@ -1,6 +1,6 @@
 $ProwlarrUrl = "http://localhost:9696"
 $ProwlarrApiKey = "44e45c10103a4ba6959d0430c12cb73a"
-$SonarrApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+$SonarrApiKey = ""
 
 $prowlarrHeaders = @{"X-Api-Key" = $ProwlarrApiKey}
 $sonarrHeaders = @{"X-Api-Key" = $SonarrApiKey}

@@ -282,7 +282,7 @@
 
 ### Where to Send Notifications
 - **Preferred Method:** Email
-- **Email Address:** rokonin@gmail.com
+- **Email Address:** YOUR_EMAIL@gmail.com
 - **Discord Webhook:** [If using Discord]
 
 ### What to Get Notified About

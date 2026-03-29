@@ -3,7 +3,7 @@
 ## Project Overview
 **Goal:** Transform basic Plex server into fully automated media management system
 **Timeline:** Phased approach - basic functionality first, then automation features
-**Current Status:** Phase 3 - TV automation complete (Sonarr + qBittorrent). Phase 3.5 - Ebook management COMPLETE (Calibre + Calibre-Web with remote access and SMTP/Send-to-Kindle functionality). Ready for Phase 3.6 (Readarr) and Phase 3.7 (Radarr).
+**Current Status:** Phase 3 ✅ - TV automation complete (Sonarr + qBittorrent + Prowlarr). Phase 3.5 ✅ - Ebook management COMPLETE (Calibre + Calibre-Web with remote access, SMTP/Send-to-Kindle, and standardized tag management for ~1,700 books). Radarr setup guide ready. Next: Phase 3.6 (Readarr) and Phase 3.7 (Radarr).
 
 ---
 
@@ -74,28 +74,29 @@
 
 ---
 
-## PHASE 3: BASIC AUTOMATION ðŸ“‹
+## PHASE 3: BASIC AUTOMATION ✅
 *Priority: MEDIUM - Start simple with core functionality*
+**Status: COMPLETE** - TV automation fully operational
 
-### Core Arr Applications ðŸ“‹
-- [ ] **Install Prowlarr** (indexer management)
-- [ ] **Install Sonarr** (TV show automation)
-- [ ] **Install Radarr** (movie automation)
-- [ ] **Install download client** (qBittorrent or SABnzbd)
+### Core Arr Applications ✅
+- [x] **Install Prowlarr** (indexer management)
+- [x] **Install Sonarr** (TV show automation)
+- [ ] **Install Radarr** (movie automation) — Phase 3.7
+- [x] **Install download client** (qBittorrent)
 
-### Basic Configuration ðŸ“‹
-- [ ] **Configure Prowlarr** with initial indexers
-- [ ] **Connect Sonarr to Prowlarr** and download client
-- [ ] **Connect Radarr to Prowlarr** and download client
-- [ ] **Set up basic quality profiles** in Sonarr/Radarr
-- [ ] **Configure folder monitoring** and file management
-- [ ] **Test basic automation** with a few titles
+### Basic Configuration ✅
+- [x] **Configure Prowlarr** with initial indexers (TorrentDay, TorrentLeech, Darkpeers, MyAnonamouse)
+- [x] **Connect Sonarr to Prowlarr** and qBittorrent download client
+- [ ] **Connect Radarr to Prowlarr** and download client — Phase 3.7
+- [x] **Set up basic quality profiles** in Sonarr (Conservative HD-1080p)
+- [x] **Configure folder monitoring** and file management (hardlinks enabled)
+- [x] **Test basic automation** with TV shows
 
-### Integration Testing ðŸ“‹
-- [ ] **Test TV show automation** end-to-end
-- [ ] **Test movie automation** end-to-end
-- [ ] **Verify Plex integration** (automatic detection)
-- [ ] **Monitor system resources** during operation
+### Integration Testing ✅
+- [x] **Test TV show automation** end-to-end (Sonarr → Prowlarr → qBittorrent → Plex)
+- [ ] **Test movie automation** end-to-end — Phase 3.7
+- [x] **Verify Plex integration** (automatic detection working)
+- [x] **Monitor system resources** during operation
 
 ---
 
@@ -146,18 +147,27 @@
 - [x] **Add sender to Amazon Kindle approved list**
 - [x] **Verify Send-to-Kindle** working on multiple devices
 
-**Phase 3.5 Success Criteria:** âœ… COMPLETE
-- âœ… Calibre managing clean, standardized ebook library (~70 books)
-- âœ… Web access via Calibre-Web locally (http://localhost:8083)
-- âœ… Secure remote access via Cloudflare Tunnel (https://books.mnemo.info)
-- âœ… SMTP/Send-to-Kindle functionality operational for all users
-- âœ… Automatic startup on system boot
-- âœ… User management and permissions configured
-- âœ… Family/friends successfully using the system
+### Calibre Tag Management ✅
+- [x] **Audit existing tags** with `Audit-Calibre-Tags.ps1`
+- [x] **Create standardized taxonomy** based on BISAC industry standards
+- [x] **Migrate existing tags** to standardized format with `Update-Calibre-Tags.ps1`
+- [x] **Remove cross-genre tag contamination** (non-fiction tags from fiction books)
+- [x] **Set up ongoing maintenance** with `Tag-New-Calibre-Imports.ps1`
+- [x] **Document tag system** in `docs/Calibre_Tag_Management_Guide.md`
+
+**Phase 3.5 Success Criteria:** ✅ COMPLETE
+- ✅ Calibre managing clean, standardized ebook library (~1,700 books)
+- ✅ Web access via Calibre-Web locally (http://localhost:8083)
+- ✅ Secure remote access via Cloudflare Tunnel (https://books.mnemo.info)
+- ✅ SMTP/Send-to-Kindle functionality operational for all users
+- ✅ Automatic startup on system boot
+- ✅ User management and permissions configured
+- ✅ Family/friends successfully using the system
+- ✅ Standardized tag taxonomy applied to full library
 
 ---
 
-## PHASE 3.6: EBOOK AUTOMATION (READARR) ðŸ"‹
+## PHASE 3.6: EBOOK AUTOMATION (READARR) 📋
 *Priority: MEDIUM - Automated ebook acquisition*
 
 ### Readarr Setup ðŸ"‹

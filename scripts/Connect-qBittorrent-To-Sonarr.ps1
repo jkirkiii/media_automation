@@ -11,7 +11,7 @@ param(
     [string]$qBitHost = "localhost",
     [int]$qBitPort = 8080,
     [string]$SonarrUrl = "http://localhost:8989",
-    [string]$SonarrApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+    [string]$SonarrApiKey = ""
 )
 
 $headers = @{"X-Api-Key" = $SonarrApiKey; "Content-Type" = "application/json"}

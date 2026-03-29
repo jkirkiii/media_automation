@@ -12,6 +12,7 @@ config.json
 credentials.json
 secrets.yml
 secrets.yaml
+configs/calibre_tag_mapping.ps1
 
 # Claude Code local settings
 .claude/settings.local.json

@@ -1,5 +1,5 @@
 # Check Tracker Status for StalledUP Torrents
-param([string]$user='murdoch137', [int]$port=8080)
+param([string]$user='admin', [int]$port=8080)
 
 Write-Host "`nChecking StalledUP Torrents - Tracker Status`n" -ForegroundColor Cyan
 

@@ -1,9 +1,9 @@
 # Connect qBittorrent to Sonarr - Secure Password Entry
 # This script will prompt for password securely
 
-$qBitUsername = "murdoch137"
+$qBitUsername = "admin"
 $SonarrUrl = "http://localhost:8989"
-$SonarrApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+$SonarrApiKey = ""
 $qBitHost = "localhost"
 $qBitPort = 8080
 

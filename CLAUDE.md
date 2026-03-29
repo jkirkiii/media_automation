@@ -60,6 +60,7 @@ The repository follows the structure outlined in `docs/proposed_repo_structure.m
 - `docs/Calibre-Web_Remote_Access_COMPLETE.md` - **Completed setup documentation (operational)**
 - `docs/Calibre-Web_Configuration_Decisions.md` - Configuration decisions made during setup
 - `docs/Calibre-Web_Security_Checklist.md` - Security hardening checklist (optional next steps)
+- `docs/Calibre_Tag_Management_Guide.md` - **Tag standardization system for 1,700+ book library**
 - `.gitignore` - Configured to exclude sensitive configs, media files, and runtime data
 
 ### Configuration Files
@@ -338,6 +339,29 @@ Get-Process | Where-Object {$_.ProcessName -like "*cps*" -or $_.ProcessName -lik
 - Sender approved in Amazon Kindle settings
 - Default subject/body work perfectly - no customization needed
 - Tested and working on multiple users' devices
+
+**Tag Management System:**
+```powershell
+# Initial library cleanup (one-time)
+.\scripts\Audit-Calibre-Tags.ps1  # Analyze current tags
+# Review reports in .\data\calibre_tag_audit\
+Copy-Item .\configs\calibre_tag_mapping.ps1.template .\configs\calibre_tag_mapping.ps1
+# Edit calibre_tag_mapping.ps1 based on audit results
+.\scripts\Update-Calibre-Tags.ps1 -DryRun  # Test migration
+.\scripts\Update-Calibre-Tags.ps1  # Apply standardization
+
+# Ongoing maintenance (after new imports)
+.\scripts\Tag-New-Calibre-Imports.ps1  # Auto-tag books added in last 7 days
+.\scripts\Tag-New-Calibre-Imports.ps1 -Interactive  # Confirm each book
+```
+
+**Tag Management Features:**
+- Standardized taxonomy based on BISAC industry standards
+- 3-5 tags per book (optimal for browsing)
+- Hierarchical structure (e.g., Fiction.Science Fiction.Space Opera)
+- Automated cleanup of duplicates and malformed tags
+- Keyword-based auto-tagging for new imports
+- See `docs/Calibre_Tag_Management_Guide.md` for complete documentation
 
 ### Troubleshooting
 ```powershell

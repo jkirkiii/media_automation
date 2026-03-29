@@ -1,5 +1,5 @@
 # Quick qBittorrent Tracker Status Check
-param([string]$user='murdoch137', [int]$port=8080)
+param([string]$user='admin', [int]$port=8080)
 
 Write-Host "`nqBittorrent Tracker Check`n" -ForegroundColor Cyan
 

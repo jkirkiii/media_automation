@@ -1,5 +1,5 @@
 # Fix qBittorrent Network Connection
-param([string]$user='murdoch137', [int]$port=8080)
+param([string]$user='admin', [int]$port=8080)
 
 Write-Host "`nqBittorrent Network Fix`n" -ForegroundColor Cyan
 

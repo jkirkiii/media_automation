@@ -228,7 +228,7 @@ Unregister-ScheduledTask -TaskName 'Start-CalibreWeb-Remote' -Confirm:$false
 SMTP Hostname: smtp.gmail.com
 SMTP Port: 587
 Encryption: StartTLS
-From E-mail: rokonin@gmail.com
+From E-mail: YOUR_EMAIL@gmail.com
 Authentication: Gmail App Password (16-character)
 ```
 
@@ -239,7 +239,7 @@ Authentication: Gmail App Password (16-character)
 - No customization needed - default subject/body work perfectly with Kindle
 
 ### User Access Summary
-- **Admin Account:** murdoch137 (full permissions)
+- **Admin Account:** (see config.ps1) (full permissions)
 - **User Accounts:** Multiple family/friend accounts created
 - **User Permissions:** Download, Browse, Read Online, Send to Kindle enabled
 - **Upload/Edit/Delete:** Disabled for regular users (security)

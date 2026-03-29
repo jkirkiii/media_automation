@@ -1,5 +1,5 @@
 # Check qBittorrent Network and Announce Settings
-param([string]$user='murdoch137', [int]$port=8080)
+param([string]$user='admin', [int]$port=8080)
 
 Write-Host "`nqBittorrent Settings Check`n" -ForegroundColor Cyan
 

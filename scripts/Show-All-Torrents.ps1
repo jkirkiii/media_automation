@@ -1,5 +1,5 @@
 # Show All qBittorrent Torrents and Their States
-param([string]$user='murdoch137', [int]$port=8080)
+param([string]$user='admin', [int]$port=8080)
 
 Write-Host "`nqBittorrent - All Torrents Status`n" -ForegroundColor Cyan
 

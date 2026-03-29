@@ -1,5 +1,5 @@
 $SonarrUrl = "http://localhost:8989"
-$ApiKey = "332f7d21453b4225a85fc6852bdad7ee"
+$ApiKey = ""
 $headers = @{"X-Api-Key" = $ApiKey; "Content-Type" = "application/json"}
 
 Write-Host "`n=== Sonarr Configuration ===`n" -ForegroundColor Cyan
