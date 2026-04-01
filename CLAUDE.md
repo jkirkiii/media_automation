@@ -175,6 +175,13 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 
 ## Utility Scripts Reference
 
+### Maintenance & Backup
+- **`Backup-Configs.ps1`** - **Weekly backup**: Sonarr + Prowlarr (API-triggered zip), Calibre-Web app.db, Cloudflare tunnel config. Compresses to dated archive at `A:\Backups\MediaStack\`, prunes old backups automatically.
+  - `.\scripts\Backup-Configs.ps1` — normal run (uses API + config.ps1 credentials)
+  - `.\scripts\Backup-Configs.ps1 -SkipApiBackups` — raw DB copy, no API needed
+  - `.\scripts\Backup-Configs.ps1 -BackupRoot "D:\Backups" -KeepCount 12` — custom path/retention
+- **`Schedule-WeeklyBackup.ps1`** - Registers `Backup-Configs.ps1` as a Windows Task Scheduler job (runs as SYSTEM, every Sunday 3 AM). Requires Administrator. Re-run to update schedule.
+
 ### Sonarr Configuration & Management
 - **`Configure-Sonarr.ps1`** - Complete Sonarr configuration via API (quality profiles, naming, root folder)
 - **`Configure-Sonarr-Simple.ps1`** - Minimal essential Sonarr setup
