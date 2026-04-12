@@ -2,8 +2,9 @@
 # Backs up all media stack service configs to a dated, compressed archive.
 #
 # Covers:
-#   - Sonarr   (API-triggered backup zip, falls back to raw DB copy)
-#   - Prowlarr (API-triggered backup zip, falls back to raw DB copy)
+#   - Sonarr      (API-triggered backup zip, falls back to raw DB copy)
+#   - Prowlarr    (API-triggered backup zip, falls back to raw DB copy)
+#   - Radarr      (API-triggered backup zip, falls back to raw DB copy)
 #   - Calibre-Web (app.db: users, SMTP, Kindle addresses, permissions)
 #   - Cloudflare Tunnel (config.yml, cert.pem, tunnel credential JSON)
 #
@@ -36,8 +37,10 @@ if (Test-Path $configFile) {
 
 if (-not $SonarrApiKey)   { $SonarrApiKey   = "" }
 if (-not $ProwlarrApiKey) { $ProwlarrApiKey  = "" }
+if (-not $RadarrApiKey)   { $RadarrApiKey   = "" }
 if (-not $SonarrUrl)      { $SonarrUrl      = "http://localhost:8989" }
 if (-not $ProwlarrUrl)    { $ProwlarrUrl    = "http://localhost:9696" }
+if (-not $RadarrUrl)      { $RadarrUrl      = "http://localhost:7878" }
 
 # ---------------------------------------------------------------------------
 # Setup: dated backup directory and logging
@@ -236,7 +239,43 @@ if ($SkipApiBackups -or (-not $ProwlarrApiKey)) {
 Write-Log ""
 
 # ---------------------------------------------------------------------------
-# 3. Calibre-Web
+# 3. Radarr
+# ---------------------------------------------------------------------------
+Write-Log "--- Radarr ---"
+$radarrDataDir   = "C:\ProgramData\Radarr"
+$radarrBackupDir = Join-Path $radarrDataDir "Backups"
+$radarrDbFiles   = @("config.xml", "radarr.db", "radarr.db-shm", "radarr.db-wal")
+
+if ($SkipApiBackups -or (-not $RadarrApiKey)) {
+    Write-Log "[Radarr] Copying raw database files..."
+    $count = Copy-RawDb "Radarr" $radarrDataDir $radarrDbFiles
+    if ($count -gt 0) {
+        Write-Log ("[Radarr] Copied " + $count + " file(s)") "OK"
+        Add-Result "Radarr" "OK" ("raw DB files (" + $count + ")")
+    } else {
+        Write-Log "[Radarr] No files copied -- is Radarr installed?" "FAIL"
+        Add-Result "Radarr" "FAIL" "source not found"
+    }
+} else {
+    $zip = Invoke-ArrBackup "Radarr" $RadarrUrl $RadarrApiKey "v3" $radarrBackupDir
+    if ($zip) {
+        $dest   = Join-Path $backupDir "Radarr"
+        New-Item -Path $dest -ItemType Directory -Force | Out-Null
+        Copy-Item $zip.FullName -Destination $dest
+        $sizeMB = [math]::Round($zip.Length / 1MB, 2)
+        $detail = $zip.Name + " (" + $sizeMB + " MB)"
+        Write-Log ("[Radarr] Backed up: " + $detail) "OK"
+        Add-Result "Radarr" "OK" $detail
+    } else {
+        Write-Log "[Radarr] API backup failed -- falling back to raw DB copy" "WARN"
+        $count = Copy-RawDb "Radarr" $radarrDataDir $radarrDbFiles
+        Add-Result "Radarr" "WARN" ("fallback raw DB (" + $count + " files)")
+    }
+}
+Write-Log ""
+
+# ---------------------------------------------------------------------------
+# 4. Calibre-Web
 # ---------------------------------------------------------------------------
 Write-Log "--- Calibre-Web ---"
 $calibreWebDb = "A:\Media\Calibre-Web-Config\app.db"
@@ -256,7 +295,7 @@ if (Test-Path $calibreWebDb) {
 Write-Log ""
 
 # ---------------------------------------------------------------------------
-# 4. Cloudflare Tunnel
+# 5. Cloudflare Tunnel
 # ---------------------------------------------------------------------------
 Write-Log "--- Cloudflare Tunnel ---"
 $cloudflaredDir = Join-Path $env:USERPROFILE ".cloudflared"
@@ -290,7 +329,7 @@ if ($copied -gt 0) {
 Write-Log ""
 
 # ---------------------------------------------------------------------------
-# 5. Compress staging directory to zip
+# 6. Compress staging directory to zip
 # ---------------------------------------------------------------------------
 Write-Log "--- Compressing ---"
 $archivePath = $backupDir + ".zip"
@@ -307,7 +346,7 @@ try {
 Write-Log ""
 
 # ---------------------------------------------------------------------------
-# 6. Prune old backups beyond retention limit
+# 7. Prune old backups beyond retention limit
 # ---------------------------------------------------------------------------
 Write-Log ("--- Pruning old backups (keep " + $KeepCount + ") ---")
 

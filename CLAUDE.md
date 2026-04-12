@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Plex Media Server automation project designed to transform a basic Plex server into a fully automated media management system. The project follows a phased approach detailed in `docs/project_tracker.md`.
 
-**Current Status:** Phase 3 - Sonarr configured and operational with qBittorrent integration. Automatic TV show management active. Phase 3.5 - **COMPLETE** (2025-12-06) - Calibre and Calibre-Web fully operational with remote access, SMTP, and Send-to-Kindle functionality. Ebook library accessible locally and remotely at https://books.mnemo.info with multiple users actively using the system. **Next:** Phase 3.6 - Readarr for automated ebook acquisition, then Phase 3.7 - Radarr for movie automation.
+**Current Status:** Phase 3 - Sonarr configured and operational with qBittorrent integration. Automatic TV show management active. Phase 3.5 - **COMPLETE** (2025-12-06) - Calibre and Calibre-Web fully operational with remote access, SMTP, and Send-to-Kindle functionality. Ebook library accessible locally and remotely at https://books.mnemo.info with multiple users actively using the system. Phase 3.7 - **COMPLETE** - Radarr operational for automated movie management. **Next:** Phase 3.6 - Readarr for automated ebook acquisition.
 
 ## Architecture
 
@@ -176,7 +176,7 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 ## Utility Scripts Reference
 
 ### Maintenance & Backup
-- **`Backup-Configs.ps1`** - **Weekly backup**: Sonarr + Prowlarr (API-triggered zip), Calibre-Web app.db, Cloudflare tunnel config. Compresses to dated archive at `A:\Backups\MediaStack\`, prunes old backups automatically.
+- **`Backup-Configs.ps1`** - **Weekly backup**: Sonarr + Prowlarr + Radarr (API-triggered zip), Calibre-Web app.db, Cloudflare tunnel config. Compresses to dated archive at `A:\Backups\MediaStack\`, prunes old backups automatically.
   - `.\scripts\Backup-Configs.ps1` — normal run (uses API + config.ps1 credentials)
   - `.\scripts\Backup-Configs.ps1 -SkipApiBackups` — raw DB copy, no API needed
   - `.\scripts\Backup-Configs.ps1 -BackupRoot "D:\Backups" -KeepCount 12` — custom path/retention
@@ -266,12 +266,10 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 10. 🔜 **Next:** Install Readarr for automated ebook acquisition
 11. 🔜 Integrate Readarr with Prowlarr (MyAnonamouse indexer already configured)
 
-**Radarr Setup:**
-1. Install and configure Radarr following similar pattern to Sonarr
-2. Connect Radarr to Prowlarr for indexers
-3. Configure `movie-radarr` category in qBittorrent download client settings
-4. Set up quality profiles (consider Conservative HD-1080p similar to TV)
-5. Test with manual movie search before enabling automation
+**Radarr Setup: COMPLETE ✅**
+- Radarr operational at http://localhost:7878
+- Connected to Prowlarr indexers and qBittorrent (`movie-radarr` category → `A:\Downloads\Movies`)
+- Conservative HD-1080p quality profile, hardlinks enabled, root folder at `A:\Media\Movies`
 
 ### Medium Term
 1. **Autobrr Integration** - For ratio-aware downloads and freeleech monitoring
