@@ -207,6 +207,18 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 - **`Force-Reannounce-All.ps1`** - Force reannounce to all trackers
 - **`Show-All-Torrents.ps1`** - Display all torrents with details
 
+**Seeding Audit & Cleanup:**
+- **`Audit-Seeding-Torrents.ps1`** - Reports all torrents with seed time, ratio, size, and tracker. Buckets by multiple thresholds (10/14/21/30 days), breaks down per-tracker and per-category. Flags low-ratio candidates. Optional `-ExportCsv` flag.
+  - `.\scripts\Audit-Seeding-Torrents.ps1` - audit all torrents (default 10d threshold)
+  - `.\scripts\Audit-Seeding-Torrents.ps1 -MinDays 14` - stricter threshold
+  - `.\scripts\Audit-Seeding-Torrents.ps1 -Category tv-sonarr` - single category only
+  - `.\scripts\Audit-Seeding-Torrents.ps1 -ExportCsv` - save results to `data\torrent_audit_<date>.csv`
+- **`Remove-SeededTorrents.ps1`** - Removes torrents meeting the seed threshold and deletes their Downloads copies. Runs as dry run by default -- requires `-Execute` to make changes. Hardlink safety check (fsutil) confirms the Media library copy exists before deleting anything. Ebook/audiobook/music categories always skipped. Torrents failing the hardlink check are reported but never deleted.
+  - `.\scripts\Remove-SeededTorrents.ps1` - dry run, shows what would be removed
+  - `.\scripts\Remove-SeededTorrents.ps1 -Execute` - actually remove eligible torrents
+  - `.\scripts\Remove-SeededTorrents.ps1 -MinDays 14 -Execute` - stricter threshold
+  - `.\scripts\Remove-SeededTorrents.ps1 -Category tv-sonarr -Execute` - one category only
+
 ### Media Library Management
 **Active Scripts:**
 - **`Quick-Delete-Empty.ps1`** - Delete empty directories in media library
@@ -379,6 +391,39 @@ Copy-Item .\configs\calibre_tag_mapping.ps1.template .\configs\calibre_tag_mappi
 # Update category save path
 .\scripts\Update-qBittorrent-Category-Path.ps1 -Password "yourpassword"
 ```
+
+## PowerShell Scripting Gotchas
+
+These issues have caused repeated failures when writing `.ps1` scripts for this project. Check these before debugging.
+
+### 1. Bash eats `$` variables in `-Command` strings
+Running `powershell -Command "... $var ..."` from bash causes bash to interpolate `$var` before PowerShell sees it.
+**Fix:** Write scripts to a `.ps1` file and run with `-File`. If using `-Command`, escape every `$` as `\$`.
+
+### 2. Pipe `|` inside string literals breaks PS5.1 parser
+Using `|` inside a string that is part of a concatenation or `-f` format expression causes "Expressions are only allowed as the first element of a pipeline".
+**Fix:** Never use `|` as a visual separator in display strings. Use `--`, `//`, or spaces instead.
+
+### 3. Non-ASCII characters cause cascading parse errors
+PowerShell 5.1 reads `.ps1` files as Windows-1252 by default (no BOM). The UTF-8 bytes for an em-dash (`—`, U+2014) include byte `0x94`, which is a right curly-quote in Windows-1252 — PS5.1 treats it as a string terminator, causing "missing terminator" errors many lines later.
+**Fix:** Keep all `.ps1` files pure ASCII. Use `--` instead of `—`, straight quotes instead of curly quotes. Diagnose with:
+```powershell
+$text = [System.IO.File]::ReadAllText('script.ps1')
+($text -split '\n') | ForEach-Object -Begin { $i=0 } -Process {
+    $i++; $j=0
+    $_.ToCharArray() | ForEach-Object { $j++; if ([int]$_ -gt 127) { Write-Host "Line $i char $j : U+$([int]$_.ToString('X4'))" } }
+}
+```
+
+### 4. Pre-creating a WebRequestSession conflicts with `-SessionVariable`
+Using `New-Object Microsoft.PowerShell.Commands.WebRequestSession` before passing `-SessionVariable session` causes a null reference exception.
+**Fix:** Remove the `New-Object` line. Let `-SessionVariable` create the variable, then reference it with `$` in later calls:
+```powershell
+Invoke-WebRequest -Uri $loginUrl -SessionVariable qbSession | Out-Null
+Invoke-RestMethod -Uri $apiUrl -WebSession $qbSession
+```
+
+---
 
 ## Resources & External Documentation
 
