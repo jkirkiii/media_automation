@@ -4,15 +4,15 @@
 
 **Symptom**: Torrents show "Not contacted yet" on all trackers, tracker websites show you as not seeding.
 
-**Root Cause**: qBittorrent's network interface binding changed from NordVPN (NordLynx) to local network adapter, causing complete network disconnection.
+**Root Cause**: qBittorrent's network interface binding changed from ProtonVPN to local network adapter, causing complete network disconnection.
 
 ---
 
 ## Why This Happens
 
-When using NordVPN with qBittorrent:
-1. qBittorrent binds to a specific network adapter (NordLynx)
-2. If NordVPN reconnects, changes servers, or Windows updates network settings
+When using ProtonVPN with qBittorrent:
+1. qBittorrent binds to a specific network adapter (ProtonVPN)
+2. If ProtonVPN reconnects, changes servers, or Windows updates network settings
 3. The network adapter name/ID can change
 4. qBittorrent becomes bound to a non-existent or wrong adapter
 5. Result: "Connection Status: disconnected" and no tracker communication
@@ -39,7 +39,7 @@ Connection Status: disconnected
 1. **Tools → Options → Advanced**
 2. **Network Interface** section
 3. Change from "Local Network Adapter 2" (or whatever it's set to)
-4. Back to **"NordLynx"** (or your VPN's adapter name)
+4. Back to **"ProtonVPN"** (or your VPN's adapter name)
 5. Click **Apply** and **OK**
 
 ### Step 3: Force Reannounce
@@ -57,29 +57,29 @@ Wait 2-3 minutes, then check tracker status.
 ### Option 1: Bind to VPN Adapter (Recommended for Privacy)
 
 **Pros:**
-- ✅ Only allows torrenting through VPN
-- ✅ If VPN disconnects, torrenting stops (no IP leak)
-- ✅ Best for privacy/security
+- Only allows torrenting through VPN
+- If VPN disconnects, torrenting stops (no IP leak)
+- Best for privacy/security
 
 **Cons:**
-- ❌ Requires manual fix when VPN adapter changes
-- ❌ qBittorrent breaks if VPN disconnects
+- Requires manual fix when VPN adapter changes
+- qBittorrent breaks if VPN disconnects
 
 **How to set:**
 1. Tools → Options → Advanced
-2. Network Interface: **NordLynx** (or your VPN adapter)
+2. Network Interface: **ProtonVPN** (or your VPN adapter)
 3. Click Apply
 
 ### Option 2: Bind to "Any Interface" (Easier but Less Secure)
 
 **Pros:**
-- ✅ Never breaks when VPN reconnects
-- ✅ No manual intervention needed
-- ✅ Always stays connected
+- Never breaks when VPN reconnects
+- No manual intervention needed
+- Always stays connected
 
 **Cons:**
-- ❌ Will torrent over regular internet if VPN disconnects (IP LEAK!)
-- ❌ Not recommended for private trackers
+- Will torrent over regular internet if VPN disconnects (IP LEAK!)
+- Not recommended for private trackers
 
 **How to set:**
 1. Tools → Options → Advanced
@@ -90,15 +90,15 @@ Wait 2-3 minutes, then check tracker status.
 
 **Best approach:**
 1. Bind qBittorrent to "Any interface"
-2. Enable NordVPN's Kill Switch
-   - NordVPN Settings → Kill Switch → **Enable**
+2. Enable ProtonVPN's Kill Switch
+   - ProtonVPN → Settings → Connection → **Kill Switch** → Enable
 3. If VPN drops, Kill Switch blocks all internet
 4. No IP leaks, and no manual fixing needed
 
 **This combines:**
-- ✅ No manual intervention when VPN changes
-- ✅ No IP leaks (kill switch prevents it)
-- ✅ Always works when VPN is connected
+- No manual intervention when VPN changes
+- No IP leaks (kill switch prevents it)
+- Always works when VPN is connected
 
 ---
 
@@ -110,13 +110,13 @@ Get-NetAdapter | Select-Object Name, InterfaceDescription, Status
 ```
 
 Look for:
-- **NordLynx** (NordVPN WireGuard)
-- **TAP-NordVPN** (NordVPN OpenVPN)
+- **ProtonVPN** (ProtonVPN WireGuard - default protocol)
+- **ProtonVPN TAP** (ProtonVPN OpenVPN)
 - Status should be **Up**
 
 ### Method 2: Windows Settings
 1. Settings → Network & Internet → Advanced network settings
-2. Look for NordVPN adapters
+2. Look for ProtonVPN adapters
 3. Note the exact name
 
 ### Method 3: In qBittorrent
@@ -126,17 +126,32 @@ Look for:
 
 ---
 
+## Port Forwarding (ProtonVPN Advantage)
+
+ProtonVPN supports port forwarding on P2P servers (Plus plan and above). This improves tracker reachability and seeding ratios on private trackers.
+
+**Setup:**
+1. Connect to a P2P-labeled server in ProtonVPN
+2. ProtonVPN → Settings → Connection → **Port Forwarding** → Enable
+3. The app displays the assigned port number
+4. In qBittorrent: Tools → Options → Connection → **Listening port** → enter that port
+5. Uncheck "Use random port at each startup"
+
+> **Note:** ProtonVPN's assigned port changes each session. If tracker seeding becomes inconsistent, disable port forwarding in ProtonVPN and rely on UPnP/NAT-PMP instead.
+
+---
+
 ## Detection: How to Know This Is Happening
 
 ### Symptoms:
-1. ✅ qBittorrent shows torrents as "seeding" or "stalledUP"
-2. ✅ Tracker websites show "not seeding"
-3. ✅ All trackers show "Not contacted yet"
-4. ✅ Running `Check-qBittorrent-Settings.ps1` shows "Connection Status: disconnected"
+1. qBittorrent shows torrents as "seeding" or "stalledUP"
+2. Tracker websites show "not seeding"
+3. All trackers show "Not contacted yet"
+4. Running `Check-qBittorrent-Settings.ps1` shows "Connection Status: disconnected"
 
 ### When It Typically Happens:
 - After Windows updates
-- After NordVPN reconnects or changes servers
+- After ProtonVPN reconnects or changes servers
 - After VPN settings changes
 - After computer restart
 - After network adapter driver updates
@@ -163,14 +178,14 @@ if ($transferInfo.connection_status -ne 'connected') {
 
 ### Recommended Setup:
 
-1. **Use NordVPN Kill Switch** (prevents IP leaks)
-   - NordVPN → Settings → Kill Switch → Enable
+1. **Use ProtonVPN Kill Switch** (prevents IP leaks)
+   - ProtonVPN → Settings → Connection → Kill Switch → Enable
 
 2. **Bind to "Any Interface"** in qBittorrent
    - Tools → Options → Advanced → Network Interface → Any interface
 
 3. **Enable "Only announce to all trackers"**
-   - Tools → Options → BitTorrent → Privacy → ✅ Enable anonymous mode
+   - Tools → Options → BitTorrent → Privacy → Enable anonymous mode
 
 4. **Monitor weekly**
    - Run `Check-qBittorrent-Settings.ps1` weekly
@@ -214,12 +229,12 @@ if ($transferInfo.connection_status -ne 'connected') {
 **Root Cause**: VPN adapter changed, qBittorrent bound to wrong interface
 
 **Quick Fix**:
-1. Tools → Options → Advanced → Network Interface → NordLynx
+1. Tools → Options → Advanced → Network Interface → ProtonVPN
 2. Run `Force-Reannounce-All.ps1`
 
 **Prevention**:
 1. Bind to "Any interface"
-2. Enable NordVPN Kill Switch
+2. Enable ProtonVPN Kill Switch
 3. Monitor connection status weekly
 
 **When to Check**:
@@ -241,5 +256,5 @@ if ($transferInfo.connection_status -ne 'connected') {
 ## Additional Resources
 
 - qBittorrent FAQ: Network binding
-- NordVPN Support: Kill Switch setup
+- ProtonVPN Support: Kill Switch and Port Forwarding setup
 - `docs/FIXING_TRACKER_SEEDING_ISSUES.md` - General tracker troubleshooting

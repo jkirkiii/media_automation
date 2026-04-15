@@ -204,7 +204,7 @@ Sonarr detected 4 upcoming episodes that will auto-download:
 ### Download Stuck
 **Check:**
 1. qBittorrent - Is it downloading?
-2. VPN - Is NordVPN connected?
+2. VPN - Is ProtonVPN connected?
 3. Activity → Queue - Any warnings?
 
 **Solutions:**

@@ -1,5 +1,5 @@
 # Force Reannounce All StalledUP Torrents
-param([string]$user='admin', [int]$port=8080)
+param([string]$user=$qBittorrentUsername, [int]$port=8080)
 
 Write-Host "`nForce Reannounce - StalledUP Torrents`n" -ForegroundColor Cyan
 

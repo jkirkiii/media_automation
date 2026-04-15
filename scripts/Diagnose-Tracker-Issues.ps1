@@ -139,7 +139,7 @@ try {
     $publicIP = (Invoke-RestMethod -Uri "https://api.ipify.org?format=json").ip
     Write-Host "Public IP: $publicIP" -ForegroundColor White
 
-    # Simple VPN check (NordVPN IPs usually don't match local ISP)
+    # Simple VPN check (VPN IPs usually don't match local ISP)
     if ($publicIP -match "^192\.168\.|^10\.|^172\.") {
         Write-Host "⚠️  Showing local IP - VPN may not be active!" -ForegroundColor Red
     } else {
@@ -169,7 +169,7 @@ Write-Host "   - Enable 'Use UPnP / NAT-PMP'" -ForegroundColor White
 Write-Host "   - Or forward port manually in router" -ForegroundColor White
 
 Write-Host "`n4. Verify VPN Split Tunneling:" -ForegroundColor Yellow
-Write-Host "   - NordVPN settings" -ForegroundColor White
+Write-Host "   - ProtonVPN Settings -- Connection -- Split Tunneling" -ForegroundColor White
 Write-Host "   - Ensure qBittorrent is routing through VPN" -ForegroundColor White
 Write-Host "   - Ensure tracker communication is allowed" -ForegroundColor White
 

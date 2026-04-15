@@ -113,11 +113,11 @@ On private trackers:
 2. Click **"Random port"** and restart qBittorrent
 3. Or manually forward the port in your router
 
-**If using VPN (NordVPN):**
+**If using VPN (ProtonVPN):**
 - Some VPN servers don't support port forwarding
-- Try different NordVPN server
-- Or use NordVPN's P2P-optimized servers
-- Check NordVPN docs for port forwarding setup
+- Try different ProtonVPN P2P server
+- Or use ProtonVPN's P2P-optimized servers (labeled "P2P")
+- ProtonVPN supports port forwarding on Plus plan -- enable in Settings → Connection → Port Forwarding
 
 ---
 
@@ -129,29 +129,29 @@ On private trackers:
 - Tracker errors: "Connection timeout"
 
 **What's happening:**
-- NordVPN may be blocking tracker announce URLs
+- ProtonVPN may be blocking tracker announce URLs
 - VPN's firewall blocking UDP announces
 - Split tunneling misconfigured
 
 **Solution: Check VPN Settings**
 
-**In NordVPN:**
-1. Open NordVPN settings
-2. Check **Split Tunneling**
+**In ProtonVPN:**
+1. Open ProtonVPN settings
+2. Check **Connection** → **Split Tunneling**
 3. Ensure qBittorrent is routed through VPN
 4. Ensure tracker URLs aren't blocked
 
 **Test without VPN (temporarily):**
-1. Disconnect NordVPN
+1. Disconnect ProtonVPN
 2. Force reannounce in qBittorrent
 3. Check if tracker updates
 4. If yes: VPN is the issue
 
 **If VPN is the issue:**
-- Try different NordVPN server (preferably P2P server)
-- Enable port forwarding in NordVPN (if supported)
+- Try different ProtonVPN server (preferably P2P server)
+- Enable port forwarding in ProtonVPN (Settings → Connection → Port Forwarding)
 - Whitelist tracker domains in VPN settings
-- Check NordVPN kill switch settings
+- Check ProtonVPN kill switch settings
 
 ---
 
@@ -244,7 +244,7 @@ This will show:
 ### Step 5: Verify VPN
 
 **Ensure VPN not blocking:**
-1. Temporarily disconnect NordVPN
+1. Temporarily disconnect ProtonVPN
 2. Force reannounce
 3. If it works: VPN is blocking
 4. Reconnect and configure VPN properly
@@ -288,8 +288,8 @@ Try these in order:
 3. If not, force reannounce immediately
 
 **VPN Configuration:**
-1. Use NordVPN P2P servers for torrenting
-2. Enable split tunneling for qBittorrent
+1. Use ProtonVPN P2P servers for torrenting
+2. Enable split tunneling for qBittorrent if needed
 3. Ensure kill switch doesn't block tracker announces
 4. Test periodically that VPN allows tracker communication
 

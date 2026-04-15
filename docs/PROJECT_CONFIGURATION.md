@@ -201,7 +201,7 @@
 - **Network Type:** Wired
 - **Router/Firewall:** [Any special configuration needed?]
 - **VPN Usage:** For torrenting? Always
-- **VPN Provider:** NordVPN
+- **VPN Provider:** ProtonVPN
 
 ### Remote Access (If Applicable)
 - **Remote Access Needed:** No

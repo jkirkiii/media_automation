@@ -53,13 +53,13 @@ try {
     } else {
         Write-Host "`nStill disconnected. Additional troubleshooting needed." -ForegroundColor Yellow
         Write-Host "`nPossible causes:" -ForegroundColor Cyan
-        Write-Host "  - NordVPN blocking qBittorrent" -ForegroundColor White
+        Write-Host "  - ProtonVPN blocking qBittorrent" -ForegroundColor White
         Write-Host "  - Firewall blocking connections" -ForegroundColor White
         Write-Host "  - Port forwarding issues" -ForegroundColor White
         Write-Host "`nTry:" -ForegroundColor Cyan
         Write-Host "  1. Restart qBittorrent completely" -ForegroundColor White
         Write-Host "  2. Check Windows Firewall settings" -ForegroundColor White
-        Write-Host "  3. Verify NordVPN allows P2P on this server" -ForegroundColor White
+        Write-Host "  3. Verify ProtonVPN allows P2P on this server" -ForegroundColor White
     }
 
 } catch {

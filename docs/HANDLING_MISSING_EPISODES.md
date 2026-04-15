@@ -333,7 +333,7 @@ Let's say you want to complete "Abbott Elementary" which has missing episodes:
 ✅ **Watch Activity → Queue** - ensure no failures
 ✅ **Check qBittorrent** - verify all downloading
 ✅ **Monitor ratio** - ensure not dropping too low
-✅ **Verify VPN** - NordVPN should always be connected
+✅ **Verify VPN** - ProtonVPN should always be connected
 
 ### After Downloads Complete
 
