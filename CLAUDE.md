@@ -219,6 +219,13 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
   - `.\scripts\Remove-SeededTorrents.ps1 -MinDays 14 -Execute` - stricter threshold
   - `.\scripts\Remove-SeededTorrents.ps1 -Category tv-sonarr -Execute` - one category only
 
+### RAR Archive Extraction
+Downloads from some release groups (e.g. BRAVERY) arrive as multi-part RAR archives (`.rar` + `.r00`, `.r01`, ...) instead of plain video files. Use this script to extract before Sonarr can import.
+- **`Extract-RarSeason.ps1`** - Extracts multi-part RAR archives for every episode in a season folder. Skips episodes already extracted. Requires 7-Zip (expected at `C:\Program Files\7-Zip\7z.exe`).
+  - `.\scripts\Extract-RarSeason.ps1 -SeasonPath "A:\Downloads\TV\Show.S01.1080p..."` - extract all episodes
+  - Re-run safely: already-extracted episodes are skipped automatically
+  - After extraction, trigger Sonarr import via **Wanted -> Manual Import** or **Series -> Rescan Files**
+
 ### Media Library Management
 **Active Scripts:**
 - **`Quick-Delete-Empty.ps1`** - Delete empty directories in media library
