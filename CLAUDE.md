@@ -181,6 +181,12 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
   - `.\scripts\Backup-Configs.ps1 -SkipApiBackups` — raw DB copy, no API needed
   - `.\scripts\Backup-Configs.ps1 -BackupRoot "D:\Backups" -KeepCount 12` — custom path/retention
 - **`Schedule-WeeklyBackup.ps1`** - Registers `Backup-Configs.ps1` as a Windows Task Scheduler job (runs as SYSTEM, every Sunday 3 AM). Requires Administrator. Re-run to update schedule.
+- **`Auto-CleanupOrphans.ps1`** - **Weekly automated cleanup** orchestrator. Identifies and removes hardlink-orphaned download torrents (true disk duplicates) while preserving private-tracker safety. Pipeline: disk-free gate -> -arr queue exclusion -> seeding audit dry-run -> hardlink failure analysis -> targeted removal via qBittorrent API (deleteFiles=true) -> log + email summary. Defaults: 300 GB free-space threshold, 21-day seed minimum, books/audiobooks/music categories excluded, MAM tracker (`t.myanonamouse.net`) excluded. Logs to `logs\auto_cleanup_<timestamp>.log`. Requires SMTP credentials in `config.ps1` for email reporting.
+  - `.\scripts\Auto-CleanupOrphans.ps1` -- standard run (auto-skips if free space > 300 GB)
+  - `.\scripts\Auto-CleanupOrphans.ps1 -Force -DryRun` -- analyze + email summary, no deletions
+  - `.\scripts\Auto-CleanupOrphans.ps1 -NoEmail` -- skip email (useful for testing)
+  - `.\scripts\Auto-CleanupOrphans.ps1 -FreeSpaceThresholdGB 500 -MinSeedDays 28` -- custom thresholds
+- **`Schedule-WeeklyCleanup.ps1`** - Registers `Auto-CleanupOrphans.ps1` as a Windows Task Scheduler job (runs as SYSTEM, every Monday 4 AM -- 1h after the weekly backup). Requires Administrator.
 
 ### Sonarr Configuration & Management
 - **`Configure-Sonarr.ps1`** - Complete Sonarr configuration via API (quality profiles, naming, root folder)
@@ -218,6 +224,27 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
   - `.\scripts\Remove-SeededTorrents.ps1 -Execute` - actually remove eligible torrents
   - `.\scripts\Remove-SeededTorrents.ps1 -MinDays 14 -Execute` - stricter threshold
   - `.\scripts\Remove-SeededTorrents.ps1 -Category tv-sonarr -Execute` - one category only
+
+**Hardlink Failure Workflow (true-duplicate cleanup):**
+Counterpart to `Remove-SeededTorrents.ps1`. While that script protects torrents whose Media copy is hardlinked (deletion would free 0 GB), the scripts below target the inverse case -- torrents whose Downloads copy is NOT linked to Media (Sonarr upgraded, replaced, or never imported them as hardlinks). These are true disk duplicates and removal frees real space.
+- **`Extract-HardlinkFailures.ps1`** - Parses captured stdout from a `Remove-SeededTorrents.ps1` dry run and writes a fresh `data\hardlink_failures.txt` for the analyzer. Auto-detects newest `data\seeded_dryrun_*.txt`.
+- **`Analyze-HardlinkFailures.ps1`** - Categorizes each failure as `UPGRADE_ORPHAN_EPISODE`, `SEASON_COMPLETE`, `MOVIE_FOUND` (safe to remove), `ACTIVE_SEASON` / `MISSING_SEASON` / `SHOW_NOT_IN_MEDIA` / `MOVIE_NOT_FOUND` (investigate), `BOOK_OR_OTHER` (skip), or `AMBIGUOUS` (manual review). Exports `data\hardlink_analysis_<date>.csv`. Use `-ExportCsv`.
+- **`Verify-MediaTargets.ps1`** - Sanity-checks every `MediaPath` in the analysis CSV before deletion -- confirms the target file or season folder is actually on disk with playable video content.
+- **`Remove-HardlinkOrphanTorrents.ps1`** - Removes torrents from qBittorrent (`deleteFiles=true`) for analyzed entries in the safe categories. Three independent safety layers: (1) re-checks video-file hardlink status at removal time, (2) refuses any `content_path` under `A:\Media`, (3) excludes configurable qB categories (default: `books`, `audiobooks`, `music`), tracker hosts (default: `t.myanonamouse.net`), and arbitrary hashes (used by the orchestrator to skip -arr queue items). Dry run by default; requires `-Execute`.
+  - `.\scripts\Remove-HardlinkOrphanTorrents.ps1` -- dry run with all safety filters active
+  - `.\scripts\Remove-HardlinkOrphanTorrents.ps1 -Execute` -- apply removals
+  - `.\scripts\Remove-HardlinkOrphanTorrents.ps1 -ExcludeTrackers @("t.myanonamouse.net","cow.milkie.cc") -Execute` -- additional tracker guards
+- **`Auto-CleanupOrphans.ps1`** (above in Maintenance & Backup) -- chains all four steps under safety gates and emails a summary.
+
+Typical manual sequence (one-shot deep clean):
+```powershell
+.\scripts\Remove-SeededTorrents.ps1 -MinDays 21 *>&1 | Tee-Object data\seeded_dryrun.txt
+.\scripts\Extract-HardlinkFailures.ps1 -InputFile data\seeded_dryrun.txt
+.\scripts\Analyze-HardlinkFailures.ps1 -ExportCsv
+.\scripts\Verify-MediaTargets.ps1
+.\scripts\Remove-HardlinkOrphanTorrents.ps1            # dry run
+.\scripts\Remove-HardlinkOrphanTorrents.ps1 -Execute   # apply
+```
 
 ### RAR Archive Extraction
 Downloads from some release groups (e.g. BRAVERY) arrive as multi-part RAR archives (`.rar` + `.r00`, `.r01`, ...) instead of plain video files. Use this script to extract before Sonarr can import.

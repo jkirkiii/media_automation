@@ -35,4 +35,14 @@ $WindowsShareUsername = "YOUR_WINDOWS_SHARE_USERNAME"
 $WindowsSharePassword = "YOUR_WINDOWS_SHARE_PASSWORD"
 $WindowsShareServer = "YOUR_SERVER_COMPUTER_NAME"  # e.g., "mnemosyne"
 
+# Gmail SMTP Configuration (for Auto-CleanupOrphans email reports, etc.)
+# Use a Gmail App Password (not your account password). Generate one at:
+#   https://myaccount.google.com/apppasswords
+$SmtpServer    = "smtp.gmail.com"
+$SmtpPort      = 587
+$SmtpUsername  = "YOUR_GMAIL_ADDRESS@gmail.com"
+$SmtpPassword  = "YOUR_GMAIL_APP_PASSWORD"   # 16-char app password (spaces optional)
+$SmtpFrom      = "YOUR_GMAIL_ADDRESS@gmail.com"
+$SmtpReportTo  = "YOUR_GMAIL_ADDRESS@gmail.com"
+
 Write-Host "[CONFIG] Credentials loaded from config.ps1" -ForegroundColor Gray
