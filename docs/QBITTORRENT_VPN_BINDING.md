@@ -141,13 +141,26 @@ ProtonVPN supports port forwarding on P2P servers (Plus plan and above). This im
 
 ---
 
-## Automated Port Sync (Recommended -- replaces manual port maintenance)
+## Automated Sync (Recommended -- replaces manual port AND interface maintenance)
 
-ProtonVPN port forwarding is driven by **NAT-PMP** against the VPN gateway (`10.2.0.1`),
-both in the GUI app today and over a bare WireGuard tunnel in the future. `Sync-VpnPort.ps1`
-speaks NAT-PMP directly (pure PowerShell, no `natpmpc.exe`), renews the mapping lease, and
-whenever the forwarded port differs from qBittorrent's listening port it updates qBittorrent
-via the Web API and force-reannounces all torrents.
+A ProtonVPN reconnect breaks **two** things at once, and `Sync-VpnPort.ps1` now fixes both:
+
+1. **Forwarded port rotates** -- qBittorrent's listening port goes stale.
+2. **Tunnel interface renumbers** -- the friendly name stays `ProtonVPN` but the underlying
+   `iftype53_NNNNN` value changes (e.g. `iftype53_32772` -> `iftype53_32768`). qBittorrent
+   stays bound to the dead interface, shows **Connection status: disconnected**, and silently
+   stops announcing to every tracker -- the exact "shows seeding locally but trackers don't"
+   symptom this guide is about.
+
+ProtonVPN port forwarding is driven by **NAT-PMP** against the VPN gateway (`10.2.0.1`), both
+in the GUI app today and over a bare WireGuard tunnel in the future. `Sync-VpnPort.ps1` speaks
+NAT-PMP directly (pure PowerShell, no `natpmpc.exe`), renews the mapping lease, and each pass
+reconciles BOTH the listening port and the bound interface (resolved by the stable name
+`ProtonVPN`) against reality. If either drifted it updates qBittorrent via the Web API and
+force-reannounces. **While the VPN is down it leaves the binding untouched** so the real IP
+cannot leak -- it resyncs automatically once the tunnel returns.
+
+To check what's wrong at any time (read-only): `.\scripts\Diagnose-TrackerSeeding.ps1`.
 
 **One-time setup:**
 ```powershell

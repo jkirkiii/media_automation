@@ -1,12 +1,19 @@
 # Sync-VpnPort.ps1
-# Keeps ProtonVPN's forwarded port alive and synced into qBittorrent automatically.
+# Keeps qBittorrent healthy across ProtonVPN reconnects, automatically.
+#
+# A ProtonVPN reconnect breaks TWO things at once, both fixed here:
+#   1. Forwarded port rotates  -> qBittorrent's listening port goes stale.
+#   2. Tunnel interface renumbers (the friendly name stays 'ProtonVPN' but the
+#      underlying iftype53_NNNNN value changes) -> qBittorrent stays bound to a dead
+#      interface, goes "disconnected", and silently stops announcing to all trackers.
 #
 # How it works:
 #   ProtonVPN port forwarding (both the GUI app today and a manual WireGuard tunnel
 #   later) is driven by NAT-PMP against the VPN gateway (10.2.0.1). This script speaks
 #   NAT-PMP directly over UDP (no natpmpc.exe dependency), renews the mapping lease, and
-#   whenever the forwarded port differs from qBittorrent's listening port it updates
-#   qBittorrent via its Web API and force-reannounces all torrents.
+#   each pass reconciles BOTH the listening port and the bound network interface against
+#   reality. If either drifted it updates qBittorrent via the Web API and force-reannounces.
+#   While the VPN is down it intentionally leaves the binding alone so the real IP cannot leak.
 #
 # WireGuard migration note:
 #   Today the ProtonVPN GUI app renews the NAT-PMP lease for you; our renewals here are
@@ -99,16 +106,28 @@ function Connect-QBit {
     Invoke-WebRequest -Uri "$base/api/v2/auth/login" -Method POST -Body "username=$qbUser&password=$qbPass" -SessionVariable qbSession -UseBasicParsing | Out-Null
     $script:qbSession = $qbSession
 }
-function Get-QBitPort {
+function Get-QBitState {
     $base = "http://localhost:$qBitPort"
     $prefs = Invoke-RestMethod -Uri "$base/api/v2/app/preferences" -WebSession $script:qbSession
-    return [int]$prefs.listen_port
+    return [pscustomobject]@{
+        ListenPort = [int]$prefs.listen_port
+        Interface  = [string]$prefs.current_network_interface
+    }
 }
-function Set-QBitPort {
-    param([int]$NewPort)
+function Get-ProtonInterfaceValue {
+    # ProtonVPN reconnects keep the friendly name 'ProtonVPN' but renumber the
+    # underlying iftype53_NNNNN value, which silently breaks qBittorrent's binding.
+    # Resolve the current value by the stable name.
     $base = "http://localhost:$qBitPort"
-    $json = '{"listen_port":' + $NewPort + ',"random_port":false}'
-    $body = "json=" + [uri]::EscapeDataString($json)
+    $ifaces = Invoke-RestMethod -Uri "$base/api/v2/app/networkInterfaceList" -WebSession $script:qbSession
+    $proton = $ifaces | Where-Object { $_.name -eq 'ProtonVPN' } | Select-Object -First 1
+    if ($proton) { return [string]$proton.value }
+    return $null
+}
+function Set-QBitPrefs {
+    param([string]$JsonBody)
+    $base = "http://localhost:$qBitPort"
+    $body = "json=" + [uri]::EscapeDataString($JsonBody)
     Invoke-WebRequest -Uri "$base/api/v2/app/setPreferences" -Method POST -Body $body -WebSession $script:qbSession -UseBasicParsing | Out-Null
 }
 function Invoke-QBitReannounce {
@@ -119,28 +138,48 @@ function Invoke-QBitReannounce {
 function Sync-Once {
     $port = Get-ForwardedPort -Lease $LeaseSeconds
     if (-not $port) {
+        # VPN down: deliberately do NOT touch the binding. Leaving qBittorrent bound
+        # to the (now dead) VPN interface means it sends no traffic, so the real IP
+        # never leaks while the tunnel is down. We resync once the VPN is back.
         Write-Log "NAT-PMP query failed (VPN down or port forwarding off?). Will retry." 'WARN'
         return
     }
     try {
         if (-not $script:qbSession) { Connect-QBit }
-        $current = Get-QBitPort
+        $state       = Get-QBitState
+        $protonIface = Get-ProtonInterfaceValue
     } catch {
         Write-Log ("qBittorrent login/query failed: " + $_.Exception.Message) 'WARN'
         $script:qbSession = $null
         return
     }
-    if ($current -ne $port) {
+
+    # Build a single setPreferences payload covering whichever of the two
+    # reconnect side-effects drifted: the forwarded port and/or the bound interface.
+    $changes = @()
+    $fields  = @()
+    if ($state.ListenPort -ne $port) {
+        $changes += ("port {0} -> {1}" -f $state.ListenPort, $port)
+        $fields  += ('"listen_port":' + $port)
+        $fields  += '"random_port":false'
+    }
+    if ($protonIface -and $state.Interface -ne $protonIface) {
+        $changes += ("interface '{0}' -> '{1}'" -f $state.Interface, $protonIface)
+        $fields  += ('"current_network_interface":"' + $protonIface + '"')
+        $fields  += '"current_interface_address":""'
+    }
+
+    if ($changes.Count -gt 0) {
         try {
-            Set-QBitPort -NewPort $port
+            Set-QBitPrefs -JsonBody ('{' + ($fields -join ',') + '}')
             Invoke-QBitReannounce
-            Write-Log ("Forwarded port changed {0} -> {1}. Updated qBittorrent and reannounced all torrents." -f $current, $port) 'CHANGE'
+            Write-Log ("Applied: " + ($changes -join '; ') + ". Reannounced all torrents.") 'CHANGE'
         } catch {
-            Write-Log ("Failed to update qBittorrent port to {0}: {1}" -f $port, $_.Exception.Message) 'ERROR'
+            Write-Log ("Failed to apply qBittorrent changes: " + $_.Exception.Message) 'ERROR'
             $script:qbSession = $null
         }
     } elseif ($Once) {
-        Write-Log ("Forwarded port {0} already matches qBittorrent. No change." -f $port)
+        Write-Log ("No change. Forwarded port {0} matches; interface '{1}' bound correctly." -f $port, $state.Interface)
     }
 }
 

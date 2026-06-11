@@ -214,11 +214,12 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 - **`Show-All-Torrents.ps1`** - Display all torrents with details
 
 **VPN Port Forwarding (ProtonVPN) -- fully automated:**
-ProtonVPN assigns a new forwarded port each session. Instead of reading it from the GUI and typing it into qBittorrent by hand (which previously caused stalled torrents and a self-inflicted WebUI ban), these scripts keep them in sync automatically via NAT-PMP (gateway `10.2.0.1`, pure PowerShell, no `natpmpc.exe`). Works with the ProtonVPN GUI app today and a bare WireGuard tunnel later without code changes -- see `docs/QBITTORRENT_VPN_BINDING.md`.
-- **`Sync-VpnPort.ps1`** - Reads the live forwarded port via NAT-PMP, renews the lease, and when it differs from qBittorrent's listening port updates qBittorrent (Web API) and force-reannounces all torrents. Logs to `logs\vpn_port_sync.log`.
-  - `.\scripts\Sync-VpnPort.ps1 -Once` -- single pass, prints whether the port matches (use to test)
+A ProtonVPN reconnect breaks TWO things: (1) the forwarded port rotates, and (2) the tunnel interface renumbers (friendly name stays `ProtonVPN` but the `iftype53_NNNNN` value changes), leaving qBittorrent bound to a dead interface -- "disconnected", no announces, trackers don't show seeding even though qB does. Both are now handled automatically via NAT-PMP (gateway `10.2.0.1`, pure PowerShell, no `natpmpc.exe`). Works with the ProtonVPN GUI app today and a bare WireGuard tunnel later without code changes -- see `docs/QBITTORRENT_VPN_BINDING.md`.
+- **`Sync-VpnPort.ps1`** - Each pass reconciles BOTH qBittorrent's listening port (against the live NAT-PMP forwarded port) AND its bound network interface (against the current `ProtonVPN` interface value). Renews the NAT-PMP lease; if either drifted, updates qBittorrent (Web API) and force-reannounces. Leaves the binding alone while the VPN is down (no IP leak). Logs to `logs\vpn_port_sync.log`.
+  - `.\scripts\Sync-VpnPort.ps1 -Once` -- single pass, prints whether port + interface match (use to test)
   - `.\scripts\Sync-VpnPort.ps1` -- run forever, ~45s loop (used by the scheduled task)
-- **`Schedule-VpnPortSync.ps1`** - Registers `Sync-VpnPort.ps1` as a logon-triggered Scheduled Task that runs continuously (unlimited execution time, single instance). Requires Administrator.
+- **`Schedule-VpnPortSync.ps1`** - Registers `Sync-VpnPort.ps1` as a logon-triggered Scheduled Task that runs continuously (unlimited execution time, single instance). Requires Administrator. NOTE: after editing `Sync-VpnPort.ps1`, restart the task (`Stop-ScheduledTask`/`Start-ScheduledTask`) so the long-running loop reloads the new code.
+- **`Diagnose-TrackerSeeding.ps1`** - Read-only. Shows qBittorrent connection status, listen port vs live NAT-PMP forwarded port, bound interface, announce settings, and a per-torrent tracker status sample. First stop when trackers don't show you seeding.
 
 **Seeding Audit & Cleanup:**
 - **`Audit-Seeding-Torrents.ps1`** - Reports all torrents with seed time, ratio, size, and tracker. Buckets by multiple thresholds (10/14/21/30 days), breaks down per-tracker and per-category. Flags low-ratio candidates. Optional `-ExportCsv` flag.
