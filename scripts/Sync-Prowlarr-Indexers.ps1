@@ -1,9 +1,11 @@
-$ProwlarrUrl = "http://localhost:9696"
-$ProwlarrApiKey = "44e45c10103a4ba6959d0430c12cb73a"
-$SonarrApiKey = ""
+# Sync-Prowlarr-Indexers.ps1
+# Triggers Prowlarr -> Sonarr application sync and reports the indexers Sonarr ends up with.
+# Loads all credentials from config.ps1 (never hardcode keys here).
+
+. (Join-Path $PSScriptRoot "..\config.ps1")
 
 $prowlarrHeaders = @{"X-Api-Key" = $ProwlarrApiKey}
-$sonarrHeaders = @{"X-Api-Key" = $SonarrApiKey}
+$sonarrHeaders   = @{"X-Api-Key" = $SonarrApiKey}
 
 Write-Host "`nGetting Sonarr app ID from Prowlarr..." -ForegroundColor Yellow
 $apps = Invoke-RestMethod -Uri "$ProwlarrUrl/api/v1/applications" -Headers $prowlarrHeaders
@@ -19,7 +21,7 @@ if ($sonarrApp) {
     Start-Sleep -Seconds 3
 
     Write-Host "Checking indexers in Sonarr..." -ForegroundColor Yellow
-    $indexers = Invoke-RestMethod -Uri "http://localhost:8989/api/v3/indexer" -Headers $sonarrHeaders
+    $indexers = Invoke-RestMethod -Uri "$SonarrUrl/api/v3/indexer" -Headers $sonarrHeaders
     Write-Host "Sonarr now has $($indexers.Count) indexers" -ForegroundColor Green
 
     if ($indexers.Count -gt 0) {
