@@ -210,8 +210,15 @@ See `docs/Credential_Management_Guide.md` for detailed instructions.
 
 **Troubleshooting/Utilities:**
 - **`Check-StalledUP-Trackers.ps1`** - Check tracker announce status for stalled torrents
-- **`Force-Reannounce-All.ps1`** - Force reannounce to all trackers
+- **`Force-Reannounce-All.ps1`** - Force reannounce to all stalledUP torrents. Auto-loads qBittorrent username AND password from `config.ps1` (no prompt). `-user`/`-password` params override. Uses `-UseBasicParsing` so it never triggers the IE-engine security prompt.
 - **`Show-All-Torrents.ps1`** - Display all torrents with details
+
+**VPN Port Forwarding (ProtonVPN) -- fully automated:**
+ProtonVPN assigns a new forwarded port each session. Instead of reading it from the GUI and typing it into qBittorrent by hand (which previously caused stalled torrents and a self-inflicted WebUI ban), these scripts keep them in sync automatically via NAT-PMP (gateway `10.2.0.1`, pure PowerShell, no `natpmpc.exe`). Works with the ProtonVPN GUI app today and a bare WireGuard tunnel later without code changes -- see `docs/QBITTORRENT_VPN_BINDING.md`.
+- **`Sync-VpnPort.ps1`** - Reads the live forwarded port via NAT-PMP, renews the lease, and when it differs from qBittorrent's listening port updates qBittorrent (Web API) and force-reannounces all torrents. Logs to `logs\vpn_port_sync.log`.
+  - `.\scripts\Sync-VpnPort.ps1 -Once` -- single pass, prints whether the port matches (use to test)
+  - `.\scripts\Sync-VpnPort.ps1` -- run forever, ~45s loop (used by the scheduled task)
+- **`Schedule-VpnPortSync.ps1`** - Registers `Sync-VpnPort.ps1` as a logon-triggered Scheduled Task that runs continuously (unlimited execution time, single instance). Requires Administrator.
 
 **Seeding Audit & Cleanup:**
 - **`Audit-Seeding-Torrents.ps1`** - Reports all torrents with seed time, ratio, size, and tracker. Buckets by multiple thresholds (10/14/21/30 days), breaks down per-tracker and per-category. Flags low-ratio candidates. Optional `-ExportCsv` flag.
@@ -456,6 +463,14 @@ Using `New-Object Microsoft.PowerShell.Commands.WebRequestSession` before passin
 Invoke-WebRequest -Uri $loginUrl -SessionVariable qbSession | Out-Null
 Invoke-RestMethod -Uri $apiUrl -WebSession $qbSession
 ```
+
+### 5. `[byte] -shl` overflows within the 8-bit type and silently yields 0
+When assembling a multi-byte integer from a `byte[]` (e.g. parsing a NAT-PMP response), shifting a `[byte]` left by 8 or more bits drops the shifted bits because the operand stays a byte: `[byte]0xEF -shl 8` is `0`, not `61184`. You silently read only the low byte (e.g. port `61391` parses as `207`).
+**Fix:** Cast each byte to `[int]` (or `[uint32]` for wider fields) before shifting:
+```powershell
+$port = ([int]$resp[10] -shl 8) -bor [int]$resp[11]   # correct
+```
+Diagnose by dumping the raw hex and hand-computing one value. Used in `scripts\Sync-VpnPort.ps1`.
 
 ---
 

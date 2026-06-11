@@ -137,7 +137,40 @@ ProtonVPN supports port forwarding on P2P servers (Plus plan and above). This im
 4. In qBittorrent: Tools → Options → Connection → **Listening port** → enter that port
 5. Uncheck "Use random port at each startup"
 
-> **Note:** ProtonVPN's assigned port changes each session. If tracker seeding becomes inconsistent, disable port forwarding in ProtonVPN and rely on UPnP/NAT-PMP instead.
+> **Note:** ProtonVPN's assigned port changes each session. **This is now automated** -- see "Automated Port Sync" below. You no longer need to read the port from the GUI and type it into qBittorrent by hand.
+
+---
+
+## Automated Port Sync (Recommended -- replaces manual port maintenance)
+
+ProtonVPN port forwarding is driven by **NAT-PMP** against the VPN gateway (`10.2.0.1`),
+both in the GUI app today and over a bare WireGuard tunnel in the future. `Sync-VpnPort.ps1`
+speaks NAT-PMP directly (pure PowerShell, no `natpmpc.exe`), renews the mapping lease, and
+whenever the forwarded port differs from qBittorrent's listening port it updates qBittorrent
+via the Web API and force-reannounces all torrents.
+
+**One-time setup:**
+```powershell
+# 1. Verify it reads the live port and matches qBittorrent
+.\scripts\Sync-VpnPort.ps1 -Once
+
+# 2. Register it to run automatically at logon (Administrator required)
+.\scripts\Schedule-VpnPortSync.ps1
+Start-ScheduledTask -TaskName "MediaStack VPN Port Sync"
+```
+
+**After setup there is nothing to do** when ProtonVPN rotates the port -- the loop detects
+the change within ~45 seconds, updates qBittorrent, and reannounces. Activity is logged to
+`logs\vpn_port_sync.log`.
+
+**WireGuard migration:** when you move off the GUI app to a manual WireGuard tunnel, no code
+changes are needed -- the gateway and NAT-PMP mechanism are identical. The script's lease
+renewals (which are redundant while the GUI runs) become the thing that keeps the port alive.
+You may optionally switch the scheduled task trigger from logon to startup at that point.
+
+> Why NAT-PMP instead of scraping the GUI: the GUI exposes the port only in its UI with no
+> stable file/API on Windows, and that approach would break on the WireGuard migration.
+> NAT-PMP works identically in both worlds.
 
 ---
 

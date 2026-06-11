@@ -1,16 +1,29 @@
 # Force Reannounce All StalledUP Torrents
-param([string]$user=$qBittorrentUsername, [int]$port=8080)
+param([string]$user, [string]$password, [int]$port=8080)
 
 Write-Host "`nForce Reannounce - StalledUP Torrents`n" -ForegroundColor Cyan
 
-$pass = Read-Host 'qBittorrent password' -AsSecureString
-$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pass)
-$password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+# Load credentials from config.ps1 (sibling of the scripts folder) unless overridden
+$configPath = Join-Path $PSScriptRoot "..\config.ps1"
+if (Test-Path $configPath) { . $configPath }
+
+if (-not $user)     { $user     = $qBittorrentUsername }
+if (-not $password) { $password = $qBittorrentPassword }
+
+if (-not $user) {
+    Write-Host "No username found. Set qBittorrentUsername in config.ps1 or pass -user." -ForegroundColor Red
+    exit
+}
+if (-not $password) {
+    $pass = Read-Host 'qBittorrent password' -AsSecureString
+    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pass)
+    $password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+}
 
 $base = "http://localhost:$port"
 
-Write-Host "Connecting to qBittorrent..." -ForegroundColor Yellow
-$login = Invoke-WebRequest -Uri "$base/api/v2/auth/login" -Method POST -Body "username=$user&password=$password" -SessionVariable qb
+Write-Host "Connecting to qBittorrent as '$user'..." -ForegroundColor Yellow
+$login = Invoke-WebRequest -Uri "$base/api/v2/auth/login" -Method POST -Body "username=$user&password=$password" -SessionVariable qb -UseBasicParsing
 
 if ($login.Content -ne 'Ok.') {
     Write-Host "Login failed" -ForegroundColor Red
@@ -33,7 +46,7 @@ foreach ($t in $stalled) {
         $reannounceUrl = "$base/api/v2/torrents/reannounce"
         $body = "hashes=$($t.hash)"
 
-        Invoke-WebRequest -Uri $reannounceUrl -Method POST -Body $body -WebSession $qb -ErrorAction Stop | Out-Null
+        Invoke-WebRequest -Uri $reannounceUrl -Method POST -Body $body -WebSession $qb -UseBasicParsing -ErrorAction Stop | Out-Null
 
         $reannounced++
 
